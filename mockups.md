@@ -1,13 +1,16 @@
 # Screen Design
 
 ### Dashboard
-![Dashboard](mockups/dashboard.png)
-
-### Settings
-
-### Statistics
+![Dashboard](designDocuments/dashboard.png)
 
 ### Records
+![Records](designDocuments/records.png)
+
+### Statistics
+![Statistics](designDocuments/statistics.png)
+
+### Settings
+![Settings](designDocuments/settings.png)
 
 ### Add / edit account
 
