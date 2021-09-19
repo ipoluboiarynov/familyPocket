@@ -9,28 +9,42 @@
 - [ ] List technologies, versions and how they will be used
 - [ ] Weekly reflection
 - [ ] Write project plan
-- [ ] Document application flow in text and pictures - I'll use wireframes that have clickable links for the screen design. Use Balsamiq?
 - [ ] Triple-check for Checkpoint 1
 
 ### Week 3
+- [ ] Create design layouts
+- [ ] Create html layouts in Angular
+- [ ] Add Spring dependencies
+- [ ] Create database diagram with tables and relatives
+- [ ] Create entities of database tables
 
 ### Week 4
+- [ ] Working on REST API
 
 ### Week 7
+- [ ] Create all unit tests for backend
 
 ### Week 8
 
+- [ ] Uploading REST API part to Heroku and testing
+
 ### Week 9
+- [ ] Working on Angular frontend part
 
 ### Week 10
+- [ ] Working on Angular frontend part
 
 ### Week 11
+- [ ] Working on Angular frontend part
 
 ### Week 12
+- [ ] Working on Angular frontend part
 
 ### Week 13
+- [ ] Testing and Fix errors
 
 ### Week 14
+- [ ] Finalize all documentation
 
 ### Week 15
 -[ ] Final Presentation

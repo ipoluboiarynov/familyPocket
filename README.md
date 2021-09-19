@@ -27,12 +27,13 @@ other, and our application will provide order in your money matters.
 | IDE | IntelliJ IDEA |
 | VCS | Git |
 | Frontend Framework | Angular 12 (typescript) |
+| REST API Service | fixer.io (free plan with 250 calls/mo) |
 
 ### Design
 
 * [User Stories](DesignDocuments/userStories.md)
 * [Tasks](DesignDocuments/tasks.md)
-* [Screen Design](DesignDocuments/Screens.md)
+* [Screen Design](DesignDocuments/screens.md)
 * [Application Flow](DesignDocuments/applicationFlow.md)
 * [Database Design](DesignDocuments/databaseDiagram.png)
 
