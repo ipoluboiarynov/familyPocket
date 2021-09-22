@@ -1,6 +1,5 @@
 package com.ivan4usa.fp.entity;
 
-import com.ivan4usa.fp.enums.Roles;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,9 +37,12 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = true, length = 50)
     private String password;
 
-    @ElementCollection(targetClass = Roles.class)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<Roles> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private Set<Role> roles;
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;

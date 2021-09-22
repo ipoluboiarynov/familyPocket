@@ -1,15 +1,20 @@
 package com.ivan4usa.fp.security;
 
 import com.ivan4usa.fp.entity.User;
+import com.ivan4usa.fp.exception.JwtCommonException;
+import com.ivan4usa.fp.services.CustomUserDetails;
 import com.ivan4usa.fp.services.CustomUserDetailsService;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -17,10 +22,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 
+/**
+ * The class that is responsible for all the authentication / authorization functionality intercepts all requests
+ * (login, logout, getting a list of tasks, editing, etc.) - everything that gets into the backend
+ */
+@Component
+@Getter
+@Setter
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final Logger logger = LogManager.getLogger(this.getClass());
+
+    // List of public urls without jwt needed
+    @Value("#{'${jwt.auth_urls}'.split(',')}")
+    private List<String> public_urls;
 
     @Autowired
     private JWTTokenProvider jwtTokenProvider;
@@ -28,35 +45,34 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
+    private JWTCookieProvider jwtCookieProvider;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String jwt = getJwtFromRequest(httpServletRequest);
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
-                User userDetails = customUserDetailsService.loadUserById(userId);
+        boolean isRequestToPublicApi = public_urls.stream().anyMatch(s-> httpServletRequest.getRequestURI().toLowerCase().equals(s));
 
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, Collections.emptyList()
-                );
+        if (!isRequestToPublicApi && SecurityContextHolder.getContext().getAuthentication() == null) {
+            String jwt = jwtCookieProvider.getCookieAccessToken(httpServletRequest);
 
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        } catch (Exception e) {
-            logger.error("Could not set user authentication. " + e);
+            if (jwt != null) {
+                if (jwtTokenProvider.validateToken(jwt)) {
+                    User user = jwtTokenProvider.getUserFromToken(jwt);
+                    CustomUserDetails userDetails = new CustomUserDetails(user);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
+
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                } else throw new JwtCommonException("jwt validate exception");
+
+            } else throw new AuthenticationCredentialsNotFoundException("token not found");
         }
-
         filterChain.doFilter(httpServletRequest, httpServletResponse);
-
-    }
-
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearToken = request.getHeader(SecurityConstants.HEADER_STRING);
-        if (StringUtils.hasText(bearToken) && bearToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
-            return bearToken.split(" ")[1];
-        }
-        return null;
     }
 }
