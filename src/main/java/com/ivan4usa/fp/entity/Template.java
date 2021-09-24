@@ -18,14 +18,13 @@ import java.util.Objects;
 public class Template {
 
     @Id
-    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "amount", nullable = true, precision = 2)
+    @Column(name = "amount", precision = 2)
     private BigDecimal amount;
 
     @Column(name = "user_id", nullable = false)

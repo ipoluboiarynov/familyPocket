@@ -18,9 +18,11 @@ import java.util.List;
 public class Filter {
 
     @Id
-    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "start_date")
     private Date startDate;
@@ -32,7 +34,7 @@ public class Filter {
     private Long userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "record_type", nullable = true, length = 8)
+    @Column(name = "record_type", length = 8)
     private RecordType recordType;
 
     @ManyToMany(cascade = CascadeType.ALL)

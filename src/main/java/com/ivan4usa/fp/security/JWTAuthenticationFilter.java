@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.security;
 
 import com.ivan4usa.fp.entity.User;
-import com.ivan4usa.fp.exception.JwtCommonException;
+import com.ivan4usa.fp.exception.JwtNotValidException;
 import com.ivan4usa.fp.services.CustomUserDetails;
 import com.ivan4usa.fp.services.CustomUserDetailsService;
 import lombok.Getter;
@@ -22,7 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,7 +68,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                } else throw new JwtCommonException("jwt validate exception");
+                } else throw new JwtNotValidException("jwt validate exception");
 
             } else throw new AuthenticationCredentialsNotFoundException("token not found");
         }

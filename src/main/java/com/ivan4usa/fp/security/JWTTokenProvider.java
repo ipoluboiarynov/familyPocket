@@ -42,14 +42,6 @@ public class JWTTokenProvider {
         Date now = new Date();
         Date exp = new Date(System.currentTimeMillis() + expiration_time_short);
         Map<String, Object> claimMap = new HashMap<>();
-
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String json = objectMapper.writeValueAsString(user);
-//
-//        String base64 = Base64.encodeBase64String(json.getBytes(StandardCharsets.UTF_8));
-
-
-
         claimMap.put(CLAIM_USER_KEY, user);
         claimMap.put(Claims.SUBJECT, user.getId());
 

@@ -9,6 +9,8 @@ import com.ivan4usa.fp.repository.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,5 +74,15 @@ public class UserService {
 
     public int updateUserPassword(String password, String email) {
         return userRepository.updateUserPassword(bCryptPasswordEncoder.encode(password), email);
+    }
+
+    /**
+     * Method returns user id from SecurityContextHolder context
+     * @return
+     */
+    public Long getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails customUser = (CustomUserDetails) authentication.getPrincipal();
+        return customUser.getId();
     }
 }

@@ -17,7 +17,6 @@ import java.util.Objects;
 public class Category {
 
     @Id
-    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

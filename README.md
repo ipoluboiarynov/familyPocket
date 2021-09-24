@@ -31,13 +31,12 @@ other, and our application will provide order in your money matters.
 
 ### Design
 
-* [User Stories](DesignDocuments/userStories.md)
-* [Tasks](DesignDocuments/tasks.md)
-* [Screen Design](DesignDocuments/screens.md)
-* [Application Flow](DesignDocuments/applicationFlow.md)
-* [Database Design](DesignDocuments/databaseDiagram.png)
+* [User Stories](documentation/UserStories.md)
+* [Tasks](documentation/Tasks.md)
+* [Screen Design](documentation/Screens.md)
+* [Database Design](documentation/design/databaseDiagram.png)
 
 ### Project Plan
 
-* [Project Plan](ProjectPlan.md)
-* [Time Log](TimeLog.md)
+* [Project Plan](documentation/ProjectPlan.md)
+* [Time Log](documentation/TimeLog.md)

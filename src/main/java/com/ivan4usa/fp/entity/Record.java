@@ -19,7 +19,6 @@ import java.util.Objects;
 public class Record {
 
     @Id
-    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -29,7 +28,7 @@ public class Record {
     @Column(name = "amount", nullable = false, precision = 2)
     private BigDecimal amount;
 
-    @Column(name = "comment", nullable = true, length = 500)
+    @Column(name = "comment", length = 500)
     private String comment;
 
     @Enumerated(EnumType.STRING)

@@ -1,8 +1,6 @@
 package com.ivan4usa.fp.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 
@@ -13,16 +11,16 @@ import java.util.Objects;
 @Table(name = "account_type", schema = "fp_db")
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class AccountType {
 
     @Id
-    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private Integer name;
+    @Column(name = "name", nullable = false, length = 45)
+    private String name;
 
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private boolean negative;
