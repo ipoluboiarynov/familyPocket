@@ -14,9 +14,9 @@
 | 9/21/21 | Testing authentication and registering new user and fixing errors | 3 |  |
 | 9/22/21 | Generating an ssl key and setting https encryption on local hosting, Debugging and fixing errors with reading and receiving user data from a token, and also the problems with writing a cookie with a token and then using it in requests of registered user | 4 |  |
 | 9/23/21 | Creating repositories/services/controllers for all entities | 2 |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| 9/24/21 | Testing interaction with the database (extraction, editing, deletion and retrieval) of each entity | 5 |  |
+| 9/25/21 | Writing unit tests for service account and controller account | 4 |  |
+| 9/26/21 | Writing unit tests for the rest of the services and controllers (except for the user and authentication classes) | 6 |  |
 |  |  |  |  |
 |  |  |  |  |
 

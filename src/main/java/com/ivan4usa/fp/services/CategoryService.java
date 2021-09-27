@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -17,11 +18,12 @@ public class CategoryService {
     }
 
     public List<Category> findAll(Long userId) {
+
         return repository.findCategoriesByUserId(userId);
     }
 
-    public Category findById(Long id) {
-        return repository.findById(id).isPresent() ? repository.findById(id).get() : null;
+    public Optional<Category> findById(Long id) {
+        return repository.findById(id);
     }
 
     public Category add(Category category) {

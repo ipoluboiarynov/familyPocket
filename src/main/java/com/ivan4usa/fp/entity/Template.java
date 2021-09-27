@@ -1,6 +1,7 @@
 package com.ivan4usa.fp.entity;
 
 import com.ivan4usa.fp.enums.RecordType;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Template {
 
     @Id

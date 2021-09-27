@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FilterService {
@@ -19,8 +20,8 @@ public class FilterService {
         return repository.findFiltersByUserId(userId);
     }
 
-    public Filter findById(Long id) {
-        return repository.findById(id).isPresent() ? repository.findById(id).get() : null;
+    public Optional<Filter> findById(Long id) {
+        return repository.findById(id);
     }
 
     public Filter add(Filter filter) {

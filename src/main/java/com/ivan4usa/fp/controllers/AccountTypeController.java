@@ -19,7 +19,6 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/account-type")
 public class AccountTypeController {
-
     private final Logger logger = LogManager.getLogger(this.getClass());
     private final AccountTypeService service;
     private final UserService userService;
@@ -31,8 +30,12 @@ public class AccountTypeController {
     }
 
     @PostMapping("/all")
-    public ResponseEntity<List<AccountType>> findAll() {
-        Long userId = this.userService.getUserId();
+    public ResponseEntity<List<AccountType>> findAll(@RequestBody Long userId) {
+        Long checkUserId = this.userService.getUserId();
+        if (!Objects.equals(checkUserId, userId)) {
+            logger.error("Account type is not match to user id of " + userId);
+            return new ResponseEntity("Account type is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+        }
         return ResponseEntity.ok(service.findAll(userId));
     }
 
@@ -41,7 +44,7 @@ public class AccountTypeController {
         Long userId = this.userService.getUserId();
         AccountType accountType = null;
         try {
-            accountType = service.findById(id);
+            accountType = service.findById(id).get();
         } catch (NoSuchElementException e) {
             logger.error("Account type with id = " + id + " not found");
             return new ResponseEntity("Account type not found", HttpStatus.NOT_ACCEPTABLE);
@@ -74,17 +77,21 @@ public class AccountTypeController {
     @PatchMapping("/update")
     public ResponseEntity<AccountType> update(@RequestBody AccountType accountType) {
         Long userId = this.userService.getUserId();
+        Long id = accountType.getId();
         if (accountType.getId() == null || accountType.getId() == 0) {
             logger.error("Account type id is null");
             return new ResponseEntity("Account type id is null", HttpStatus.NOT_ACCEPTABLE);
         }
-        if (accountType.getName() == null ||
-                accountType.getUserId() == null) {
+        if (accountType.getName() == null || accountType.getUserId() == null) {
             logger.error("Some fields of account type are empty");
             return new ResponseEntity("Some fields of account type are empty", HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(accountType.getUserId(), userId)) {
             return new ResponseEntity("Account type is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (!service.findById(id).isPresent()) {
+            logger.error("Account type id" + id + " is not found");
+            return new ResponseEntity("Account type id " + id + " is not found", HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.update(accountType));
     }
@@ -95,7 +102,7 @@ public class AccountTypeController {
         Long id = accountType.getId();
 
         if (id == null || id == 0) {
-            return new ResponseEntity("id missed", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity("Account type id missed", HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(accountType.getUserId(), userId)) {
             return new ResponseEntity("Account type is not match to user id", HttpStatus.NOT_ACCEPTABLE);
@@ -103,8 +110,8 @@ public class AccountTypeController {
         try {
             service.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.error("account type id "+ id + " not found");
-            return new ResponseEntity("account id " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error("Account type id "+ id + " not found");
+            return new ResponseEntity("Account type id " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity(HttpStatus.OK);
     }

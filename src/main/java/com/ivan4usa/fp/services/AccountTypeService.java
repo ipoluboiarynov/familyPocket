@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountTypeService {
@@ -20,8 +21,8 @@ public class AccountTypeService {
         return repository.findAccountTypesByUserId(userId);
     }
 
-    public AccountType findById(Long id) {
-        return repository.findById(id).isPresent() ? repository.findById(id).get() : null;
+    public Optional<AccountType> findById(Long id) {
+        return repository.findById(id);
     }
 
     public AccountType add(AccountType accountType) {

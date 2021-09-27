@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RecordService {
 
     private RecordRepository repository;
+
     @Autowired
     public RecordService(RecordRepository repository) {
         this.repository = repository;
@@ -20,8 +22,8 @@ public class RecordService {
         return repository.findRecordsByUserId(userId);
     }
 
-    public Record findById(Long id) {
-        return repository.findById(id).isPresent() ? repository.findById(id).get() : null;
+    public Optional<Record> findById(Long id) {
+        return repository.findById(id);
     }
 
     public Record add(Record record) {

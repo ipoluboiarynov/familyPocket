@@ -1,7 +1,6 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.ivan4usa.fp.entity.User;
 import com.ivan4usa.fp.exception.JsonException;
 import com.ivan4usa.fp.payload.request.LoginRequest;
 import com.ivan4usa.fp.payload.request.RegisterRequest;
@@ -10,7 +9,10 @@ import com.ivan4usa.fp.security.JWTTokenProvider;
 import com.ivan4usa.fp.services.CustomUserDetails;
 import com.ivan4usa.fp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpCookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

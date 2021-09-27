@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CurrencyService {
@@ -20,8 +21,8 @@ public class CurrencyService {
         return repository.findCurrenciesByUserId(userId);
     }
 
-    public Currency findById(Long id) {
-        return repository.findById(id).isPresent() ? repository.findById(id).get() : null;
+    public Optional<Currency> findById(Long id) {
+        return repository.findById(id);
     }
 
     public Currency add(Currency currency) {
