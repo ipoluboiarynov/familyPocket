@@ -40,3 +40,7 @@ other, and our application will provide order in your money matters.
 
 * [Project Plan](documentation/ProjectPlan.md)
 * [Time Log](documentation/TimeLog.md)
+
+### Security
+
+* [Security Structure Presentation](documentation/SecurityPresentation.pptx)

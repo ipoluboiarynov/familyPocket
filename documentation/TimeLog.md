@@ -17,7 +17,7 @@
 | 9/24/21 | Testing interaction with the database (extraction, editing, deletion and retrieval) of each entity | 5 |  |
 | 9/25/21 | Writing unit tests for service account and controller account | 4 |  |
 | 9/26/21 | Writing unit tests for the rest of the services and controllers (except for the user and authentication classes) | 6 |  |
+| 9/30/21 | Prepared a presentation on application security | 6 |  |
+| 10/1/21 | Added login and registration pages | 3 |  |
+| 10/2/21 | Checked the work of registration and login, took screenshots | 2 |  |
 |  |  |  |  |
-|  |  |  |  |
-
-

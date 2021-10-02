@@ -8,6 +8,8 @@ import com.ivan4usa.fp.security.JWTCookieProvider;
 import com.ivan4usa.fp.security.JWTTokenProvider;
 import com.ivan4usa.fp.services.CustomUserDetails;
 import com.ivan4usa.fp.services.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +31,7 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JWTCookieProvider jwtCookieProvider;
+    private final Logger logger = LogManager.getLogger(this.getClass());
 
     @Autowired
     public AuthController(JWTTokenProvider jwtTokenProvider, UserService userService,
@@ -41,6 +44,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) throws JsonProcessingException {
+        logger.warn("Hello World");
         // Check login and password
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
