@@ -15,18 +15,23 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity(debug = true)
-//@EnableGlobalMethodSecurity(
-//        securedEnabled = true,
-//        jsr250Enabled = true,
-//        proxyTargetClass = true
-//)
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        proxyTargetClass = true
+)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${jwt.auth_urls}")
     private String auth_urls;
+
+    @Value("${client.url}")
+    private String clientUrl;
 
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -36,6 +41,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
+    }
+
+    /**
+     * Cors settings
+     * @return
+     */
+    @Bean
+    public WebMvcConfigurer configurer() {
+       return new WebMvcConfigurer() {
+           @Override
+           public void addCorsMappings(CorsRegistry registry) {
+               registry
+                       // for all urls of server
+                       .addMapping("//**")
+                       // allowed sources that can send requests
+                       .allowedOrigins(clientUrl)
+                       // allowed sending cookies
+                       .allowCredentials(true)
+                       // allowed all headers
+                       .allowedHeaders("*")
+                       // allowed all mwthods (GET, POST...)
+                       .allowedMethods("*");
+           }
+       };
     }
 
     /**

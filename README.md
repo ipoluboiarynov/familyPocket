@@ -1,5 +1,6 @@
-# Family Pocket app by Ivan Poluboiarynov
-
+# Family Pocket app
+#### by Ivan Poluboiarynov
+___
 ### Problem statement
 
 Each of us has several bank cards, cash, perhaps even saving accounts, and so on. And if someone asks us how much we 
