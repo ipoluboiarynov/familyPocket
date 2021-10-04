@@ -20,11 +20,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity(debug = true)
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        proxyTargetClass = true
-)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${jwt.auth_urls}")
