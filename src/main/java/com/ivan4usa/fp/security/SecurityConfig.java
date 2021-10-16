@@ -42,25 +42,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Cors settings
      * @return
      */
-    @Bean
-    public WebMvcConfigurer configurer() {
-       return new WebMvcConfigurer() {
-           @Override
-           public void addCorsMappings(CorsRegistry registry) {
-               registry
-                       // for all urls of server
-                       .addMapping("//**")
-                       // allowed sources that can send requests
-                       .allowedOrigins(clientUrl)
-                       // allowed sending cookies
-                       .allowCredentials(true)
-                       // allowed all headers
-                       .allowedHeaders("*")
-                       // allowed all mwthods (GET, POST...)
-                       .allowedMethods("*");
-           }
-       };
-    }
+//    @Bean
+//    public WebMvcConfigurer configurer() {
+//       return new WebMvcConfigurer() {
+//           @Override
+//           public void addCorsMappings(CorsRegistry registry) {
+//               registry
+//                       // for all urls of server
+//                       .addMapping("//**")
+//                       // allowed sources that can send requests
+//                       .allowedOrigins(clientUrl)
+//                       // allowed sending cookies
+//                       .allowCredentials(true)
+//                       // allowed all headers
+//                       .allowedHeaders("*")
+//                       // allowed all mwthods (GET, POST...)
+//                       .allowedMethods("*");
+//           }
+//       };
+//    }
 
     /**
      * Inject JWTAuthenticationFilter to this class
