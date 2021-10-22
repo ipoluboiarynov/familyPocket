@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -65,11 +66,12 @@ public class UserService {
         return this.userRepository.findUserByEmail(email).isPresent();
     }
 
-    public User getUserById(Long id) {
-        if (userRepository.findUserById(id).isPresent()) {
-            return userRepository.findUserById(id).get();
-        }
-        return null;
+    public Optional<User> getUserById(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails customUser = (CustomUserDetails) authentication.getPrincipal();
+        if (customUser.getId() == id) {
+            return Optional.ofNullable(customUser.getUser());
+        } else return Optional.empty();
     }
 
     public int updateUserPassword(String password, String email) {
@@ -84,5 +86,9 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails customUser = (CustomUserDetails) authentication.getPrincipal();
         return customUser.getId();
+    }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 }

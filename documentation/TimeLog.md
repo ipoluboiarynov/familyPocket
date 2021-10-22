@@ -20,4 +20,4 @@
 | 9/30/21 | Prepared a presentation on application security | 6 |  |
 | 10/1/21 | Added login and registration pages | 3 |  |
 | 10/2/21 | Checked the work of registration and login, took screenshots | 2 |  |
-|  |  |  |  |
+| 10/22/21 | Added loading of exchange rates from an external api service and created a test | 2 |  |
