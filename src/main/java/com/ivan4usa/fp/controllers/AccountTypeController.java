@@ -96,16 +96,10 @@ public class AccountTypeController {
         return ResponseEntity.ok(service.update(accountType));
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<AccountType> delete(@RequestBody AccountType accountType) {
-        Long userId = this.userService.getUserId();
-        Long id = accountType.getId();
-
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<AccountType> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
             return new ResponseEntity("Account type id missed", HttpStatus.NOT_ACCEPTABLE);
-        }
-        if (!Objects.equals(accountType.getUserId(), userId)) {
-            return new ResponseEntity("Account type is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
         try {
             service.delete(id);

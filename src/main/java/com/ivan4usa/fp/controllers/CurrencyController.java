@@ -2,6 +2,8 @@ package com.ivan4usa.fp.controllers;
 
 import com.ivan4usa.fp.entity.Account;
 import com.ivan4usa.fp.entity.Currency;
+import com.ivan4usa.fp.fixer.Rates;
+import com.ivan4usa.fp.fixer.RatesService;
 import com.ivan4usa.fp.services.CurrencyService;
 import com.ivan4usa.fp.services.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -24,11 +28,15 @@ public class CurrencyController {
     private final Logger logger = LogManager.getLogger(this.getClass());
     private final CurrencyService service;
     private final UserService userService;
+    private final RatesService ratesService;
+    private final CurrencyService currencyService;
 
     @Autowired
-    public CurrencyController(CurrencyService service, UserService userService) {
+    public CurrencyController(CurrencyService service, UserService userService, RatesService ratesService, CurrencyService currencyService) {
         this.service = service;
         this.userService = userService;
+        this.ratesService = ratesService;
+        this.currencyService = currencyService;
     }
 
     @PostMapping("/all")
@@ -99,16 +107,10 @@ public class CurrencyController {
         return ResponseEntity.ok(service.update(currency));
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<Account> delete(@RequestBody Currency currency) {
-        Long userId = this.userService.getUserId();
-        Long id = currency.getId();
-
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Account> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
             return new ResponseEntity("Currency id missed", HttpStatus.NOT_ACCEPTABLE);
-        }
-        if (!Objects.equals(currency.getUserId(), userId)) {
-            return new ResponseEntity("Currency is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
         try {
             service.delete(id);
@@ -117,5 +119,13 @@ public class CurrencyController {
             return new ResponseEntity("Currency id " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("rates")
+    public ResponseEntity<Rates> updateRates(@RequestBody String date) throws IOException, InterruptedException {
+        Long userId = this.userService.getUserId();
+        List<Currency> currencyList = currencyService.findAll(userId);
+//        return ResponseEntity.ok(ratesService.loadRatesByDate(currencyList, date));
+        return  ResponseEntity.ok(ratesService.loadRatesByDateFixer(date));
     }
 }

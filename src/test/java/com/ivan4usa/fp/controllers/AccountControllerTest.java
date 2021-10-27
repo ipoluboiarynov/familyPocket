@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -60,7 +62,7 @@ class AccountControllerTest {
         account2.setUserId(5L);
 
         when(userService.getUserId()).thenReturn(5L);
-        doReturn(Lists.newArrayList(account1, account2)).when(service).findAll(5L);
+        doReturn(Lists.newArrayList(account1, account2)).when(service).findAll(5L, new Date());
         // Execute the POST request
         mockMvc.perform(MockMvcRequestBuilders.post("/api/account/all")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +101,7 @@ class AccountControllerTest {
         account.setUserId(7L);
 
         when(userService.getUserId()).thenReturn(7L);
-        doReturn(Optional.of(account)).when(service).findById(7L);
+        doReturn(Optional.of(account)).when(service).findById(7L, new Date());
         // Execute the POST request
         mockMvc.perform(MockMvcRequestBuilders.post("/api/account/id")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -187,7 +189,7 @@ class AccountControllerTest {
         accountReturn.setStartBalance(new BigDecimal("0.00"));
         accountReturn.setUserId(2L);
 
-        when(service.findById(1L)).thenReturn(Optional.of(accountFoundById));
+        when(service.findById(1L, new Date())).thenReturn(Optional.of(accountFoundById));
         when(userService.getUserId()).thenReturn(2L);
         doReturn(accountReturn).when(service).update(any());
 

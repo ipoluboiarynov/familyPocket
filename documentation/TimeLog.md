@@ -21,3 +21,7 @@
 | 10/1/21 | Added login and registration pages | 3 |  |
 | 10/2/21 | Checked the work of registration and login, took screenshots | 2 |  |
 | 10/22/21 | Added loading of exchange rates from an external api service and created a test | 2 |  |
+| 10/25/21 | Work on the frontend: on the settings page, loading and displaying all entities, editing and deleting them. | 4 |
+| 10/26/21 | Work on the frontend: on the settings page, loading and displaying all entities, editing and deleting them. | 4 |
+| 10/27/21 | Working with AWS: Downloading the backend repository on AWS and troubleshooting. |  |
+|  |  |  |

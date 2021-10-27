@@ -10,7 +10,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +62,7 @@ class AccountServiceTest {
 
         doReturn(Arrays.asList(account1, account2, account3)).when(repository).findAccountsByUserId(2L);
         // Execute the service call
-        List<Account> accounts = service.findAll(2L);
+        List<Account> accounts = service.findAll(2L, new Date());
 
         // Assert the response
         Assertions.assertEquals(3, accounts.size(), "findAll should return 3 accounts");
@@ -79,7 +81,7 @@ class AccountServiceTest {
         account.setUserId(1L);
         doReturn(Optional.of(account)).when(repository).findById(10L);
         // Execute the service call
-        Optional<Account> returnedAccount = service.findById(10L);
+        Optional<Account> returnedAccount = service.findById(10L, new Date());
         // Assert the response
         Assertions.assertNotNull(Optional.of(returnedAccount).get(), "Account was not found");
         Assertions.assertSame(returnedAccount.get(), account, "The account returned was not the same as the mock");
@@ -90,7 +92,7 @@ class AccountServiceTest {
         // Set up a mock repository
         doReturn(Optional.empty()).when(repository).findById(1L);
         // Execute the service call
-        Optional<Account> returnedAccount = service.findById(1L);
+        Optional<Account> returnedAccount = service.findById(1L, new Date());
         // Assert the response
         Assertions.assertFalse(returnedAccount.isPresent(), "Account should not be found");
     }
@@ -159,7 +161,7 @@ class AccountServiceTest {
         // Execute the service call
         service.add(account);
         service.delete(8L);
-        Optional<Account> returnedAccount = service.findById(8L);
+        Optional<Account> returnedAccount = service.findById(8L, new Date());
         // Assert the response
         Assertions.assertFalse(returnedAccount.isPresent(), "Account should not be found");
     }

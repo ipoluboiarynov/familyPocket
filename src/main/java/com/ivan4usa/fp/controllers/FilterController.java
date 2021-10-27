@@ -98,16 +98,10 @@ public class FilterController {
         return ResponseEntity.ok(service.update(filter));
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<Filter> delete(@RequestBody Filter filter) {
-        Long userId = this.userService.getUserId();
-        Long id = filter.getId();
-
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Filter> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
             return new ResponseEntity("Filter id missed", HttpStatus.NOT_ACCEPTABLE);
-        }
-        if (!Objects.equals(filter.getUserId(), userId)) {
-            return new ResponseEntity("Filter is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
         try {
             service.delete(id);

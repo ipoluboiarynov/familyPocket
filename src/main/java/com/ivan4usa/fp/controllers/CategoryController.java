@@ -97,16 +97,10 @@ public class CategoryController {
         return ResponseEntity.ok(service.update(category));
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<Category> delete(@RequestBody Category category) {
-        Long userId = this.userService.getUserId();
-        Long id = category.getId();
-
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Category> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
             return new ResponseEntity("Category id missed", HttpStatus.NOT_ACCEPTABLE);
-        }
-        if (!Objects.equals(category.getUserId(), userId)) {
-            return new ResponseEntity("Category is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
         try {
             service.delete(id);

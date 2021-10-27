@@ -2,9 +2,15 @@ package com.ivan4usa.fp.services;
 
 import com.ivan4usa.fp.entity.Account;
 import com.ivan4usa.fp.repository.AccountRepository;
+import com.ivan4usa.fp.wrappers.IdAndDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +24,24 @@ public class AccountService {
         this.repository = repository;
     }
 
-    public List<Account> findAll(Long userId) {
-        return repository.findAccountsByUserId(userId);
+    public List<Account> findAll(Long userId, Date date) {
+        List<Account> list = repository.findAccountsByUserId(userId);
+        list.forEach(account -> {
+            Long id = account.getId();
+            BigDecimal balance = this.repository.getBalanceByAccountId(id, date);
+            account.setBalance(balance);
+        });
+        return list;
     }
 
-    public Optional<Account> findById(Long id) {
-        return repository.findById(id);
+    public Optional<Account> findById(Long id, Date date) {
+        if (this.repository.findAccountById(id).isPresent()) {
+            Account account = this.repository.findAccountById(id).get();
+            BigDecimal balance = this.repository.getBalanceByAccountId(id, date);
+            account.setBalance(balance);
+            return Optional.of(account);
+        }
+        return Optional.empty();
     }
 
     public Account add(Account account) {

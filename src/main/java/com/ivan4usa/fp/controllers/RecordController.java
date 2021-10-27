@@ -102,16 +102,10 @@ public class RecordController {
         return ResponseEntity.ok(service.update(record));
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<Record> delete(@RequestBody Record record) {
-        Long userId = this.userService.getUserId();
-        Long id = record.getId();
-
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Record> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
             return new ResponseEntity("id missed", HttpStatus.NOT_ACCEPTABLE);
-        }
-        if (!Objects.equals(record.getUserId(), userId)) {
-            return new ResponseEntity("Record is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
         try {
             service.delete(id);

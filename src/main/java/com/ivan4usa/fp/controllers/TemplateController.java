@@ -65,7 +65,6 @@ public class TemplateController {
             return new ResponseEntity("Template id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
         if (template.getName() == null ||
-                template.getRecordType() == null ||
                 template.getUserId() == null) {
             logger.error("Some fields of template are empty");
             return new ResponseEntity("Some fields of template are empty", HttpStatus.NOT_ACCEPTABLE);
@@ -85,7 +84,6 @@ public class TemplateController {
             return new ResponseEntity("Template id is null", HttpStatus.NOT_ACCEPTABLE);
         }
         if (template.getName() == null ||
-                template.getRecordType() == null ||
                 template.getUserId() == null) {
             logger.error("Some fields of template are empty");
             return new ResponseEntity("Some fields of template are empty", HttpStatus.NOT_ACCEPTABLE);
@@ -100,16 +98,10 @@ public class TemplateController {
         return ResponseEntity.ok(service.update(template));
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<Template> delete(@RequestBody Template template) {
-        Long userId = this.userService.getUserId();
-        Long id = template.getId();
-
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Template> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
             return new ResponseEntity("Template id missed", HttpStatus.NOT_ACCEPTABLE);
-        }
-        if (!Objects.equals(template.getUserId(), userId)) {
-            return new ResponseEntity("Template is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
         try {
             service.delete(id);

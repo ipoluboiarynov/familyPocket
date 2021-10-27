@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -52,6 +55,9 @@ public class Account {
     @JoinColumn(name = "currency_id", referencedColumnName = "id", nullable = false)
     private Currency currency;
 
+    @Transient
+    private BigDecimal balance;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,4 +70,6 @@ public class Account {
     public int hashCode() {
         return 0;
     }
+
+
 }

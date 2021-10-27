@@ -1,6 +1,5 @@
 package com.ivan4usa.fp.controllers;
 
-import com.ivan4usa.fp.entity.Account;
 import com.ivan4usa.fp.entity.User;
 import com.ivan4usa.fp.services.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<User> findById(@RequestBody User user) {
+    public ResponseEntity<Integer> findById(@RequestBody User user) {
         Long userId = this.service.getUserId();
         Long id = user.getId();
         if (id == null && id == 0) {

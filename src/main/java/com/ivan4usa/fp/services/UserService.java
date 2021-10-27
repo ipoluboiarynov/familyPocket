@@ -80,7 +80,7 @@ public class UserService {
 
     /**
      * Method returns user id from SecurityContextHolder context
-     * @return
+     * @return user id (Long type)
      */
     public Long getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -88,7 +88,18 @@ public class UserService {
         return customUser.getId();
     }
 
-    public User updateUser(User user) {
-        return userRepository.save(user);
+    /**
+     * Method updates users data - name or/and email by id
+     *
+     * @param user with updated data
+     * @return 1 if success or 0 if failure
+     */
+    public int updateUser(User user) {
+        try {
+            return userRepository.updateUserData(user.getName(), user.getEmail(), user.getId());
+        } catch (Exception e) {
+            logger.error("Failed to update user. " + e.getMessage());
+        }
+        return 0;
     }
 }
