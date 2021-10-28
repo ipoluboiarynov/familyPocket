@@ -10,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -77,9 +76,14 @@ class AccountServiceTest {
         account.setIcon("icon");
         account.setColor("color");
         account.setCreditLimit(new BigDecimal("1000.00"));
+        account.setStartDate(new Date());
         account.setStartBalance(new BigDecimal("1.00"));
         account.setUserId(1L);
+        BigDecimal balance = new BigDecimal("1000.00");
+        account.setBalance(balance);
         doReturn(Optional.of(account)).when(repository).findById(10L);
+        doReturn(balance).when(repository).getBalanceByAccountId(10L, new Date());
+        doReturn(Optional.of(account)).when(repository).findAccountById(10L);
         // Execute the service call
         Optional<Account> returnedAccount = service.findById(10L, new Date());
         // Assert the response

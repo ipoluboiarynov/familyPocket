@@ -2,14 +2,10 @@ package com.ivan4usa.fp.services;
 
 import com.ivan4usa.fp.entity.Account;
 import com.ivan4usa.fp.repository.AccountRepository;
-import com.ivan4usa.fp.wrappers.IdAndDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

@@ -19,7 +19,7 @@ public class JWTCookieProvider {
     @Value("${jwt.cookie.max_age}")
     private int cookieAccessTokenDuration;
 
-    @Value("${server.address}")
+    @Value("${cookie.address}")
     private String cookieAccessTokenDomain;
 
     /**
