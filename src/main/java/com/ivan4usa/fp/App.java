@@ -1,14 +1,14 @@
 package com.ivan4usa.fp;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.stereotype.Controller;
 
 /**
- * Hello world!
+ * Server for Family Pocket App
  *
  */
+@Controller
 @SpringBootApplication
 public class App {
 
