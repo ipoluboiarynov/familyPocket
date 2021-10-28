@@ -194,7 +194,7 @@ class CategoryControllerTest {
         when(userService.getUserId()).thenReturn(5L);
         doNothing().when(service).delete(any());
         // Execute the DELETE request
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/category/delete")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/category/delete/2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(categoryDelete)))
                 // Validate the response code and content type

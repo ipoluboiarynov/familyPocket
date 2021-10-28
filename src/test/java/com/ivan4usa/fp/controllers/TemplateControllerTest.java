@@ -165,7 +165,7 @@ class TemplateControllerTest {
         when(userService.getUserId()).thenReturn(3L);
         doNothing().when(service).delete(any());
         // Execute the DELETE request
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/template/delete")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/template/delete/4")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(templateDelete)))
                 // Validate the response code and content type

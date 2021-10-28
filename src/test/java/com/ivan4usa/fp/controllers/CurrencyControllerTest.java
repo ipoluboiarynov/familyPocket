@@ -140,7 +140,7 @@ class CurrencyControllerTest {
         when(userService.getUserId()).thenReturn(5L);
         doNothing().when(service).delete(any());
         // Execute the DELETE request
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/currency/delete")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/currency/delete/7")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(currencyDelete)))
                 // Validate the response code and content type

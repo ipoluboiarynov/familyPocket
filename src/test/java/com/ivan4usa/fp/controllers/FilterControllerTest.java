@@ -189,7 +189,7 @@ class FilterControllerTest {
         when(userService.getUserId()).thenReturn(5L);
         doNothing().when(service).delete(any());
         // Execute the DELETE request
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/filter/delete")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/filter/delete/4")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(filterDelete)))
                 // Validate the response code and content type

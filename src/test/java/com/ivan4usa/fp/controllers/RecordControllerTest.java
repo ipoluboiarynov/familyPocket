@@ -183,7 +183,7 @@ class RecordControllerTest {
         when(userService.getUserId()).thenReturn(1L);
         doNothing().when(service).delete(any());
         // Execute the DELETE request
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/record/delete")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/record/delete/5")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(recordDelete)))
                 // Validate the response code and content type
