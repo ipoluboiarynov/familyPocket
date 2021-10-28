@@ -2,15 +2,14 @@ package com.ivan4usa.fp.fixer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ivan4usa.fp.entity.Currency;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,14 +31,20 @@ public class RatesService {
     private String fixerKey;
 
     public Rates loadRatesByDateFixer(String date) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(fixerHost + date + "?access_key=" + fixerKey + "&format=1"))
-                .method("GET", HttpRequest.BodyPublishers.noBody())
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(fixerHost + date + "?access_key=" + fixerKey + "&format=1")
+                .method("GET", null)
+                .get()
                 .build();
 
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        Response response = client.newCall(request).execute();
+
+
+
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(response.body(), Rates.class);
+        return mapper.readValue(response.body().string(), Rates.class);
     }
 
     /** Method receives List of strings of currency names and string of data
@@ -58,16 +63,18 @@ public class RatesService {
                 symbols.append("%2C").append(currency.getName());
             }
         }
+        OkHttpClient client = new OkHttpClient();
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://" + host + "/" + date + "?base=USD&symbols=" + symbols.toString()))
-                .header("x-rapidapi-host", host)
-                .header("x-rapidapi-key", apiKey)
-                .method("GET", HttpRequest.BodyPublishers.noBody())
+        Request request = new Request.Builder()
+                .url("https://" + host + "/" + date + "?base=USD&symbols=" + symbols.toString())
+                .get()
+                .addHeader("x-rapidapi-host", host)
+                .addHeader("x-rapidapi-key", apiKey)
                 .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        Response response = client.newCall(request).execute();
 
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(response.body(), Rates.class);
+        return mapper.readValue(response.body().string(), Rates.class);
     }
 }
