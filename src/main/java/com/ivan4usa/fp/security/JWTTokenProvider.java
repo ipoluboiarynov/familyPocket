@@ -2,7 +2,7 @@ package com.ivan4usa.fp.security;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
-import com.ivan4usa.fp.entity.User;
+import com.ivan4usa.fp.entities.User;
 import io.jsonwebtoken.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.services;
 
-import com.ivan4usa.fp.entity.Category;
-import com.ivan4usa.fp.repository.CategoryRepository;
+import com.ivan4usa.fp.entities.Category;
+import com.ivan4usa.fp.repositories.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

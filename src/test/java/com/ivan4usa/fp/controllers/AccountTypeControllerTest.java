@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivan4usa.fp.entity.AccountType;
+import com.ivan4usa.fp.entities.AccountType;
 import com.ivan4usa.fp.services.AccountTypeService;
 import com.ivan4usa.fp.services.UserService;
 import org.assertj.core.util.Lists;
@@ -47,8 +47,8 @@ class AccountTypeControllerTest {
         doReturn(Lists.newArrayList(accountType1, accountType2)).when(service).findAll(12L);
         // Execute the POST request
         mockMvc.perform(MockMvcRequestBuilders.post("/api/account-type/all")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(12L)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(12L)))
                 // Validate the response code and content type
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

@@ -1,8 +1,8 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivan4usa.fp.entity.Account;
-import com.ivan4usa.fp.repository.AccountRepository;
+import com.ivan4usa.fp.entities.Account;
+import com.ivan4usa.fp.repositories.AccountRepository;
 import com.ivan4usa.fp.services.AccountService;
 import com.ivan4usa.fp.services.UserService;
 import org.assertj.core.util.Lists;
@@ -17,15 +17,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-local.properties")

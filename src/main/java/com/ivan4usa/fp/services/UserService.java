@@ -1,11 +1,11 @@
 package com.ivan4usa.fp.services;
 
-import com.ivan4usa.fp.entity.Role;
-import com.ivan4usa.fp.entity.User;
-import com.ivan4usa.fp.exception.UserExistsException;
+import com.ivan4usa.fp.entities.Role;
+import com.ivan4usa.fp.entities.User;
+import com.ivan4usa.fp.exceptions.UserExistsException;
 import com.ivan4usa.fp.payload.request.RegisterRequest;
-import com.ivan4usa.fp.repository.RoleRepository;
-import com.ivan4usa.fp.repository.UserRepository;
+import com.ivan4usa.fp.repositories.RoleRepository;
+import com.ivan4usa.fp.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.ivan4usa.fp.controllers;
 
-import com.ivan4usa.fp.entity.Account;
+import com.ivan4usa.fp.entities.Account;
 import com.ivan4usa.fp.services.AccountService;
 import com.ivan4usa.fp.services.UserService;
 import com.ivan4usa.fp.wrappers.IdAndDate;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -84,13 +83,6 @@ public class AccountController {
             logger.error("Account id must be null");
             return new ResponseEntity("Account id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
-
-        System.out.println(account.getName());
-        System.out.println(account.getColor());
-        System.out.println(account.getIcon());
-        System.out.println(account.getCreditLimit());
-        System.out.println(account.getStartBalance());
-        System.out.println(account.getUserId());
         if (account.getName() == null ||
         account.getColor() == null ||
         account.getIcon() == null ||

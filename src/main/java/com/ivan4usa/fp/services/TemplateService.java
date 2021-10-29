@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.services;
 
-import com.ivan4usa.fp.entity.Template;
-import com.ivan4usa.fp.repository.TemplateRepository;
+import com.ivan4usa.fp.entities.Template;
+import com.ivan4usa.fp.repositories.TemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +12,7 @@ import java.util.Optional;
 public class TemplateService {
 
     private TemplateRepository repository;
+
     @Autowired
     public TemplateService(TemplateRepository repository) {
         this.repository = repository;

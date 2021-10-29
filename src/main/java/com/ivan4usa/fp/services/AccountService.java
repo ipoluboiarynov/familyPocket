@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.services;
 
-import com.ivan4usa.fp.entity.Account;
-import com.ivan4usa.fp.repository.AccountRepository;
+import com.ivan4usa.fp.entities.Account;
+import com.ivan4usa.fp.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

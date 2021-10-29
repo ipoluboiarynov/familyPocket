@@ -1,6 +1,6 @@
 package com.ivan4usa.fp.security;
 
-import com.ivan4usa.fp.exception.ExceptionHandlerFilter;
+import com.ivan4usa.fp.exceptions.ExceptionHandlerFilter;
 import com.ivan4usa.fp.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -37,30 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
-
-    /**
-     * Cors settings
-     * @return
-     */
-//    @Bean
-//    public WebMvcConfigurer configurer() {
-//       return new WebMvcConfigurer() {
-//           @Override
-//           public void addCorsMappings(CorsRegistry registry) {
-//               registry
-//                       // for all urls of server
-//                       .addMapping("//**")
-//                       // allowed sources that can send requests
-//                       .allowedOrigins(clientUrl)
-//                       // allowed sending cookies
-//                       .allowCredentials(true)
-//                       // allowed all headers
-//                       .allowedHeaders("*")
-//                       // allowed all mwthods (GET, POST...)
-//                       .allowedMethods("*");
-//           }
-//       };
-//    }
 
     /**
      * Inject JWTAuthenticationFilter to this class
@@ -87,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
-    protected AuthenticationManager  authenticationManager() throws Exception {
+    protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
 
@@ -99,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     /**
      * Override method for checking if user existing in database throw the customUserDetailsService service
@@ -121,6 +96,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // disable csrf attacks defender
         http.cors().and().csrf().disable();
 
+        // disable form while app uses form not of spring technology
+        http.formLogin().disable();
+
+        // turn off basic browser validation form
+        http.httpBasic().disable();
+
         // The session is not stored on the server, and every request is sent with a token
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -130,13 +111,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // start exceptionHandlerFilter filer before JWTAuthenticationFilter filter
         http.addFilterBefore(exceptionHandlerFilter(), JWTAuthenticationFilter.class);
 
-        // disable form while app uses form not of spring technology
-        http.formLogin().disable();
-
-        // turn off basic browser validation form
-        http.httpBasic().disable();
 
         // for https use
-        http.requiresChannel().anyRequest().requiresSecure();
+//        http.requiresChannel().anyRequest().requiresSecure();
+
     }
 }

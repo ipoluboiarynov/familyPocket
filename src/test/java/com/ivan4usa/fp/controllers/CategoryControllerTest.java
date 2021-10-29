@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivan4usa.fp.entity.Category;
+import com.ivan4usa.fp.entities.Category;
 import com.ivan4usa.fp.services.CategoryService;
 import com.ivan4usa.fp.services.UserService;
 import org.assertj.core.util.Lists;

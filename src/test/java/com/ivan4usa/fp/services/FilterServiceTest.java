@@ -1,8 +1,8 @@
 package com.ivan4usa.fp.services;
 
-import com.ivan4usa.fp.entity.Filter;
+import com.ivan4usa.fp.entities.Filter;
 import com.ivan4usa.fp.enums.RecordType;
-import com.ivan4usa.fp.repository.FilterRepository;
+import com.ivan4usa.fp.repositories.FilterRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

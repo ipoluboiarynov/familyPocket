@@ -1,6 +1,6 @@
 package com.ivan4usa.fp.controllers;
 
-import com.ivan4usa.fp.entity.User;
+import com.ivan4usa.fp.entities.User;
 import com.ivan4usa.fp.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

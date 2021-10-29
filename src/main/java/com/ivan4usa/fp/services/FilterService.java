@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.services;
 
-import com.ivan4usa.fp.entity.Filter;
-import com.ivan4usa.fp.repository.FilterRepository;
+import com.ivan4usa.fp.entities.Filter;
+import com.ivan4usa.fp.repositories.FilterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

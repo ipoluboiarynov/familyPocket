@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.controllers;
 
-import com.ivan4usa.fp.entity.Account;
-import com.ivan4usa.fp.entity.Currency;
+import com.ivan4usa.fp.entities.Account;
+import com.ivan4usa.fp.entities.Currency;
 import com.ivan4usa.fp.fixer.Rates;
 import com.ivan4usa.fp.fixer.RatesService;
 import com.ivan4usa.fp.services.CurrencyService;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;

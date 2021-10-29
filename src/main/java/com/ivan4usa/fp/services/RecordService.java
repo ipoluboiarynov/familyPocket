@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.services;
 
-import com.ivan4usa.fp.entity.Record;
-import com.ivan4usa.fp.repository.RecordRepository;
+import com.ivan4usa.fp.entities.Record;
+import com.ivan4usa.fp.repositories.RecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

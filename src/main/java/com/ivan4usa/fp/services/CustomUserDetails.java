@@ -1,6 +1,6 @@
 package com.ivan4usa.fp.services;
 
-import com.ivan4usa.fp.entity.User;
+import com.ivan4usa.fp.entities.User;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivan4usa.fp.entity.Record;
+import com.ivan4usa.fp.entities.Record;
 import com.ivan4usa.fp.enums.RecordType;
 import com.ivan4usa.fp.services.RecordService;
 import com.ivan4usa.fp.services.UserService;

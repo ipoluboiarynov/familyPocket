@@ -12,20 +12,19 @@ import org.springframework.test.context.TestPropertySource;
 import java.io.IOException;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource(locations = {"classpath:application.properties"})
 public class RatesServiceTest {
+    @Value("${fixer.host}")
+    private String fixerHost;
 
-    @Value("${rapid.fixer.host}")
-    String host;
-
-    @Value("${rapid.fixer.key}")
-    String apiKey;
+    @Value("${fixer.key}")
+    private String fixerKey;
 
     @Test
-    void loadRatesByDate() throws IOException, InterruptedException {
+    void loadRatesByDateFixer() throws IOException {
         List<String> currencies = new ArrayList<>();
         currencies.add("EUR");
         currencies.add("CAD");
@@ -45,10 +44,9 @@ public class RatesServiceTest {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("https://" + host + "/" + date + "?base=USD&symbols=" + symbols.toString())
-                .method("GET",null)
-                .addHeader("x-rapidapi-host", host)
-                .addHeader("x-rapidapi-key", apiKey)
+                .url(fixerHost + date + "?access_key=" + fixerKey + "&format=1")
+                .method("GET", null)
+                .get()
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -59,6 +57,7 @@ public class RatesServiceTest {
         expectedRate.put("CAD", 1.27319);
         expectedRate.put("RUB", 74.4199);
         Rates result =  mapper.readValue(response.body().string(), Rates.class);
-        assertEquals(expectedRate, result.getRates());
+        assertNotNull(result.getRates());
+
     }
 }

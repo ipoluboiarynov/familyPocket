@@ -1,7 +1,7 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.ivan4usa.fp.exception.JsonException;
+import com.ivan4usa.fp.exceptions.JsonException;
 import com.ivan4usa.fp.payload.request.LoginRequest;
 import com.ivan4usa.fp.payload.request.RegisterRequest;
 import com.ivan4usa.fp.security.JWTCookieProvider;
