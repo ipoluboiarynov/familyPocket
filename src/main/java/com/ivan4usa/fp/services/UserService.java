@@ -21,8 +21,8 @@ import java.util.Set;
 
 @Service
 public class UserService {
-    private final Logger logger = LogManager.getLogger(this.getClass());
 
+    private final Logger logger = LogManager.getLogger(this.getClass());
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;

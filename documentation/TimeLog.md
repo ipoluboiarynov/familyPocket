@@ -23,5 +23,7 @@
 | 10/22/21 | Added loading of exchange rates from an external api service and created a test | 2 |  |
 | 10/25/21 | Work on the frontend: on the settings page, loading and displaying all entities, editing and deleting them. | 4 |
 | 10/26/21 | Work on the frontend: on the settings page, loading and displaying all entities, editing and deleting them. | 4 |
-| 10/27/21 | Working with AWS: Downloading the backend repository on AWS and troubleshooting. |  |
-|  |  |  |
+| 10/27/21 | Working with AWS: Downloading the backend repository on AWS and troubleshooting. | 3 |
+| 10/28/21 | Working with AWS: Downloading the backend repository on AWS and troubleshooting. | 3 |
+| 10/29/21 | Working with AWS: Downloading the frontend repository on AWS and troubleshooting. | 3 |
+| 11/01/21 | Work in the front-end: finished the settings page, partially made the dashboard page, started work on the records page | 5 |

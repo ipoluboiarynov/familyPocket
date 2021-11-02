@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +19,7 @@ public class AccountService {
         this.repository = repository;
     }
 
-    public List<Account> findAll(Long userId, Date date) {
+    public List<Account> findAll(Long userId, String date) {
         List<Account> list = repository.findAccountsByUserId(userId);
         list.forEach(account -> {
             Long id = account.getId();
@@ -30,7 +29,7 @@ public class AccountService {
         return list;
     }
 
-    public Optional<Account> findById(Long id, Date date) {
+    public Optional<Account> findById(Long id, String date) {
         if (this.repository.findAccountById(id).isPresent()) {
             Account account = this.repository.findAccountById(id).get();
             BigDecimal balance = this.repository.getBalanceByAccountId(id, date);

@@ -32,7 +32,7 @@ public class Template {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name ="record_type", nullable = false)
     private RecordType recordType;
 

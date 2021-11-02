@@ -121,10 +121,7 @@ public class CurrencyController {
     }
 
     @PostMapping("rates")
-    public ResponseEntity<Rates> updateRates(@RequestBody String date) throws IOException, InterruptedException {
-        Long userId = this.userService.getUserId();
-        List<Currency> currencyList = currencyService.findAll(userId);
-//        return ResponseEntity.ok(ratesService.loadRatesByDate(currencyList, date));
-        return  ResponseEntity.ok(ratesService.loadRatesByDateFixer(date));
+    public ResponseEntity<Rates> updateRates(@RequestBody String date) throws IOException {
+        return ResponseEntity.ok(ratesService.loadRatesByDateRapid(date));
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,17 +38,12 @@ public class AccountController {
     public ResponseEntity<List<Account>> findAll(@RequestBody IdAndDate obj) throws ParseException {
         Long userId = obj.getId();
         String dateString = obj.getDate();
-        Date date = new Date();
-        if (dateString.length() > 0) {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            date = format.parse(dateString);
-        }
         Long checkUserId = this.userService.getUserId();
         if (!Objects.equals(checkUserId, userId)) {
             logger.error("Account is not match to user id of " + userId);
             return new ResponseEntity("Account is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
-        return ResponseEntity.ok(service.findAll(userId ,date));
+        return ResponseEntity.ok(service.findAll(userId ,dateString));
     }
 
     @PostMapping("/id")
@@ -57,14 +51,9 @@ public class AccountController {
         Long userId = this.userService.getUserId();
         Long id = obj.getId();
         String dateString = obj.getDate();
-        Date date = new Date();
-        if (dateString.length() > 0) {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            date = format.parse(dateString);
-        }
         Account account = null;
         try {
-            account = service.findById(id, date).get();
+            account = service.findById(id, dateString).get();
         } catch (NoSuchElementException e) {
             logger.error("Account with id = " + id + " not found");
             return new ResponseEntity("Account not found", HttpStatus.NOT_ACCEPTABLE);
@@ -118,7 +107,7 @@ public class AccountController {
         if (!Objects.equals(account.getUserId(), userId)) {
             return new ResponseEntity("Account is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
-        if (!service.findById(id, new Date()).isPresent()) {
+        if (!service.findById(id, new SimpleDateFormat("yyyy-MM-dd").format(new Date())).isPresent()) {
             logger.error("Account id" + id + " is not found");
             return new ResponseEntity("Account id " + id + " is not found", HttpStatus.NOT_ACCEPTABLE);
         }

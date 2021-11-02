@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class FilterService {
+
     private FilterRepository repository;
     @Autowired
     public FilterService(FilterRepository repository) {

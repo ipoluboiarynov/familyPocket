@@ -12,6 +12,7 @@ import java.util.Optional;
 public class CurrencyService {
 
     private CurrencyRepository repository;
+
     @Autowired
     public CurrencyService(CurrencyRepository repository) {
         this.repository = repository;

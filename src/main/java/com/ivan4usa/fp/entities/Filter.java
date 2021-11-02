@@ -39,12 +39,12 @@ public class Filter {
     @Column(name = "record_type", length = 8)
     private RecordType recordType;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "accounts_for_filter", joinColumns = @JoinColumn(name = "filter_id"),
             inverseJoinColumns = @JoinColumn(name = "account_id"))
     private List<Account> accounts = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "categories_for_filter", joinColumns = @JoinColumn(name = "filter_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories = new ArrayList<>();

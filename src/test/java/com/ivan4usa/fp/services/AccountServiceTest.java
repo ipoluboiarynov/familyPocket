@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -61,7 +62,7 @@ class AccountServiceTest {
 
         doReturn(Arrays.asList(account1, account2, account3)).when(repository).findAccountsByUserId(2L);
         // Execute the service call
-        List<Account> accounts = service.findAll(2L, new Date());
+        List<Account> accounts = service.findAll(2L, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
         // Assert the response
         Assertions.assertEquals(3, accounts.size(), "findAll should return 3 accounts");
@@ -82,10 +83,10 @@ class AccountServiceTest {
         BigDecimal balance = new BigDecimal("1000.00");
         account.setBalance(balance);
         doReturn(Optional.of(account)).when(repository).findById(10L);
-        doReturn(balance).when(repository).getBalanceByAccountId(10L, new Date());
+        doReturn(balance).when(repository).getBalanceByAccountId(10L, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         doReturn(Optional.of(account)).when(repository).findAccountById(10L);
         // Execute the service call
-        Optional<Account> returnedAccount = service.findById(10L, new Date());
+        Optional<Account> returnedAccount = service.findById(10L, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         // Assert the response
         Assertions.assertNotNull(Optional.of(returnedAccount).get(), "Account was not found");
         Assertions.assertSame(returnedAccount.get(), account, "The account returned was not the same as the mock");
@@ -96,7 +97,7 @@ class AccountServiceTest {
         // Set up a mock repository
         doReturn(Optional.empty()).when(repository).findById(1L);
         // Execute the service call
-        Optional<Account> returnedAccount = service.findById(1L, new Date());
+        Optional<Account> returnedAccount = service.findById(1L, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         // Assert the response
         Assertions.assertFalse(returnedAccount.isPresent(), "Account should not be found");
     }
@@ -165,7 +166,7 @@ class AccountServiceTest {
         // Execute the service call
         service.add(account);
         service.delete(8L);
-        Optional<Account> returnedAccount = service.findById(8L, new Date());
+        Optional<Account> returnedAccount = service.findById(8L, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         // Assert the response
         Assertions.assertFalse(returnedAccount.isPresent(), "Account should not be found");
     }

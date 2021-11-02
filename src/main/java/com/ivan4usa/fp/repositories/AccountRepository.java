@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +17,13 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findAccountById(@Param("id") Long id);
 
-    @Query("SELECT ((case when a.startDate <= :date then a.startBalance ELSE 0 END) + " +
-            "sum(CASE WHEN r.recordType = 'INCOME' and r.recordDate <= :date THEN r.amount ELSE 0 END) - " +
-            "sum(case when r.recordType = 'EXPENSE' and r.recordDate <= :date then r.amount else 0 END)) " +
-            "as balance from Account as a left join Record as r on a.id = r.account.id where r.account.id=:id")
-    BigDecimal getBalanceByAccountId(@Param("id") Long id, @Param("date") Date date);
+    @Query(value = "SELECT ((CASE WHEN a.start_date <= :date THEN a.start_balance ELSE 0 END) + " +
+            "SUM(CASE WHEN r.record_type = 'INCOME' AND r.record_date <= :date THEN r.amount ELSE 0 END) - " +
+            "SUM(CASE WHEN r.record_type = 'EXPENSE' AND r.record_date <= :date THEN r.amount ELSE 0 END)) " +
+            "AS balance FROM fp_db.account AS a LEFT JOIN fp_db.record AS r ON a.id = r.account_id WHERE a.id=:id",
+    nativeQuery = true)
+    BigDecimal getBalanceByAccountId(
+            @Param("id") Long id,
+            @Param("date") String date
+    );
 }

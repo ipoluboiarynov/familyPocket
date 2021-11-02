@@ -22,15 +22,34 @@ public class RatesService {
     @Value("${fixer.key}")
     private String fixerKey;
 
-    public Rates loadRatesByDateFixer(String date) throws IOException, InterruptedException {
-        OkHttpClient client = new OkHttpClient();
+    @Value("${rapid.host}")
+    private String rapidHost;
 
+    @Value("${rapid.key}")
+    private String rapidKey;
+
+    public Rates loadRatesByDateFixer(String date) throws IOException {
+        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(fixerHost + date + "?access_key=" + fixerKey + "&format=1")
                 .method("GET", null)
                 .get()
                 .build();
 
+        Response response = client.newCall(request).execute();
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(response.body().string(), Rates.class);
+    }
+
+    public Rates loadRatesByDateRapid(String date) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://" + rapidHost + "/" + date + "?base=USD")
+                .get()
+                .addHeader("x-rapidapi-host", rapidHost)
+                .addHeader("x-rapidapi-key", rapidKey)
+                .build();
         Response response = client.newCall(request).execute();
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(response.body().string(), Rates.class);
