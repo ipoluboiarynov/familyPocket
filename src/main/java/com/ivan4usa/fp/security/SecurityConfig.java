@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -74,6 +76,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.
+                        addMapping("/**"). // for all URL
+                        allowedOrigins(clientUrl). // from which addresses to allow requests (can be specified separated by commas)
+                        allowCredentials(true). // allow cookies to be sent for cross-site request
+                        allowedHeaders("*"). // allow all headers - without this setting, it may not work in some browsers
+                        allowedMethods("*"); // all methods are allowed (GET, POST, etc.) - CORS won't work without this setting!
+            }
+        };
+    }
 
     /**
      * Override method for checking if user existing in database throw the customUserDetailsService service
@@ -94,7 +110,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // disable csrf attacks defender
-        http.cors().and().csrf().disable();
+        http.csrf().disable();
+
+        http.cors();
 
         // disable form while app uses form not of spring technology
         http.formLogin().disable();
@@ -110,7 +128,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // start exceptionHandlerFilter filer before JWTAuthenticationFilter filter
         http.addFilterBefore(exceptionHandlerFilter(), JWTAuthenticationFilter.class);
-
 
         // for https use
 //        http.requiresChannel().anyRequest().requiresSecure();

@@ -29,7 +29,6 @@ public class JWTCookieProvider {
      */
     public HttpCookie createJwtCookie(String jwt) {
         return ResponseCookie
-                //cookie config
                 .from(access_token, jwt) // name and value of cookie
                 .maxAge(cookieAccessTokenDuration) // max age of cookie
                 .sameSite(SameSiteCookies.STRICT.getValue()) // protection from requests from third-party sites (CSRF-attacks)
@@ -37,8 +36,7 @@ public class JWTCookieProvider {
                 .secure(true) // only for https protocols of requests
                 .domain(cookieAccessTokenDomain) // domain that acceptable for cookie
                 .path("/") // cookie is valid for any page of domain
-                // create cookie
-                .build();
+                .build();  // create cookie
     }
 
     /**

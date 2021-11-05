@@ -55,7 +55,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         if (!isRequestToPublicApi && SecurityContextHolder.getContext().getAuthentication() == null) {
             String jwt = jwtCookieProvider.getCookieAccessToken(httpServletRequest);
-
             if (jwt != null) {
                 if (jwtTokenProvider.validateToken(jwt)) {
                     User user = jwtTokenProvider.getUserFromToken(jwt);
