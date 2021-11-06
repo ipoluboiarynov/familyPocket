@@ -69,6 +69,7 @@ public class AuthController {
         // Create header for http response and add cookie
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
+        httpHeaders.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Set-Cookie");
 
         return ResponseEntity.ok().headers(httpHeaders).body(userDetails.getUser());
     }
