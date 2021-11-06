@@ -3,6 +3,7 @@ package com.ivan4usa.fp.exceptions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -14,7 +15,7 @@ import java.io.IOException;
 /**
  * Component of Spring container that catch all exceptions in all filter and returns json response
  */
-
+@Component
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     @Override

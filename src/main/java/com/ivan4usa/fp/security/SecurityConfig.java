@@ -4,6 +4,7 @@ import com.ivan4usa.fp.exceptions.ExceptionHandlerFilter;
 import com.ivan4usa.fp.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -28,54 +30,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${client.url}")
     private String clientUrl;
 
-    private final CustomUserDetailsService customUserDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
-    /**
-     * All arguments constructor
-     */
+    private JWTAuthenticationFilter authenticationFilter;
+    private ExceptionHandlerFilter exceptionHandlerFilter;
+
     @Autowired
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+    public void setExceptionHandlerFilter(ExceptionHandlerFilter exceptionHandlerFilter) {
+        this.exceptionHandlerFilter = exceptionHandlerFilter;
+    }
+
+    @Autowired
+    public void setCustomUserDetailsService(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
 
-    /**
-     * Inject JWTAuthenticationFilter to this class
-     * @return new JWTAuthenticationFilter object
-     */
-    @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter() {
-        return new JWTAuthenticationFilter();
-    };
-
-    /**
-     * Inject ExceptionHandlerFilter to this class
-     * @return new ExceptionHandlerFilter object
-     */
-    @Bean
-    public ExceptionHandlerFilter exceptionHandlerFilter() {
-        return new ExceptionHandlerFilter();
-    };
-
-    /**
-     * Authentication manager for checkin login ang password of user in database
-     * @return authentication manager object
-     * @throws Exception any exception
-     */
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    @Autowired
+    public void setAuthenticationFilter(JWTAuthenticationFilter authenticationFilter) {
+        this.authenticationFilter = authenticationFilter;
     }
 
     /**
-     * Method for encoding the password
-     * @return BCryptPasswordEncoder object
+     * Method sets global CORS rules
+     * @return
      */
-    @Bean
-    BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -92,6 +70,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
+     * Method for encoding the password
+     * @return BCryptPasswordEncoder object
+     */
+    @Bean
+    BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Authentication manager for checkin login ang password of user in database
+     * @return authentication manager object
+     * @throws Exception any exception
+     */
+    @Bean(BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    /**
      * Override method for checking if user existing in database throw the customUserDetailsService service
      * @param auth AuthenticationManagerBuilder object
      * @throws Exception any exception while doing this method
@@ -99,6 +97,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder());
+    }
+
+    /**
+     * Method to disable the call to the AuthTokenFilter filter for the container servlet
+     * (so that the filter is not called 2 times, but only once from the Spring container)
+     * https://stackoverflow.com/questions/39314176/filter-invoke-twice-when-register-as-spring-bean
+     * @param filter - JWT Authentication Filter parameter
+     * @return registration
+     */
+    @Bean
+    public FilterRegistrationBean registration(JWTAuthenticationFilter filter) {
+        FilterRegistrationBean registration = new FilterRegistrationBean(filter);
+        registration.setEnabled(false);
+        return registration;
     }
 
     /**
@@ -112,8 +124,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // disable csrf attacks defender
         http.csrf().disable();
 
-        http.cors();
-
         // disable form while app uses form not of spring technology
         http.formLogin().disable();
 
@@ -124,13 +134,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // start jwtAuthenticationFilter filer before UsernamePasswordAuthenticationFilter filter
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         // start exceptionHandlerFilter filer before JWTAuthenticationFilter filter
-        http.addFilterBefore(exceptionHandlerFilter(), JWTAuthenticationFilter.class);
+        http.addFilterBefore(exceptionHandlerFilter, JWTAuthenticationFilter.class);
 
         // for https use
-//        http.requiresChannel().anyRequest().requiresSecure();
+        http.requiresChannel().anyRequest().requiresSecure();
 
     }
 }

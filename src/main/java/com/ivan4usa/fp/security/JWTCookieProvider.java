@@ -31,7 +31,7 @@ public class JWTCookieProvider {
         return ResponseCookie
                 .from(access_token, jwt) // name and value of cookie
                 .maxAge(cookieAccessTokenDuration) // max age of cookie
-                .sameSite(SameSiteCookies.STRICT.getValue()) // protection from requests from third-party sites (CSRF-attacks)
+                .sameSite(SameSiteCookies.NONE.getValue()) // protection from requests from third-party sites (CSRF-attacks)
                 .httpOnly(true) // cookie is readable only on server (XSS-attacks)
                 .secure(true) // only for https protocols of requests
                 .domain(cookieAccessTokenDomain) // domain that acceptable for cookie
