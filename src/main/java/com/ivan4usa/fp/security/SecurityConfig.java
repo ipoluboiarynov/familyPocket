@@ -140,7 +140,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(exceptionHandlerFilter, JWTAuthenticationFilter.class);
 
         // for https use
-        http.requiresChannel().anyRequest().requiresSecure();
+//        http.requiresChannel().anyRequest().requiresSecure();
 
     }
 }
