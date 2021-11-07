@@ -28,7 +28,7 @@ public class Category {
     @Column(name = "icon", nullable = false, length = 50)
     private String icon;
 
-    @Type(type = "org.hibernate.type.NumericBooleanType")
+    @Column(name = "is_expense")
     private boolean isExpense;
 
     @Column(name = "user_id", nullable = false)

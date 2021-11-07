@@ -28,7 +28,7 @@ public class Currency {
     @Column(name = "icon", length = 50)
     private String icon;
 
-    @Type(type = "org.hibernate.type.NumericBooleanType")
+    @Column(name = "base")
     private boolean base;
 
     @Column(name = "user_id", nullable = false)

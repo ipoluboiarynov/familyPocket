@@ -25,7 +25,7 @@ public class AccountType {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 
-    @Type(type = "org.hibernate.type.NumericBooleanType")
+    @Column(name = "negative")
     private boolean negative;
 
     @Column(name = "user_id", nullable = false)
