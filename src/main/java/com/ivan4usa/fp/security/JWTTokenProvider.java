@@ -70,9 +70,7 @@ public class JWTTokenProvider {
             logger.error("JWT token is unsupported: " + token);
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: " + token);
-            System.out.println(e);
         }
-
         return false;
     }
 

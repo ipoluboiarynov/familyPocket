@@ -4,15 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ivan4usa.fp.exceptions.JsonException;
 import com.ivan4usa.fp.payload.request.LoginRequest;
 import com.ivan4usa.fp.payload.request.RegisterRequest;
-import com.ivan4usa.fp.security.JWTCookieProvider;
+import com.ivan4usa.fp.payload.response.JWTSuccessResponse;
 import com.ivan4usa.fp.security.JWTTokenProvider;
 import com.ivan4usa.fp.services.CustomUserDetails;
 import com.ivan4usa.fp.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpCookie;
-import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,21 +29,22 @@ public class AuthController {
     private final JWTTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private final JWTCookieProvider jwtCookieProvider;
     private final Logger logger = LogManager.getLogger(this.getClass());
+
+    @Value("${jwt.auth.token_prefix}")
+    private String TOKEN_PREFIX;
 
     @Autowired
     public AuthController(JWTTokenProvider jwtTokenProvider, UserService userService,
-                          AuthenticationManager authenticationManager, JWTCookieProvider jwtCookieProvider) {
+                          AuthenticationManager authenticationManager) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
         this.authenticationManager = authenticationManager;
-        this.jwtCookieProvider = jwtCookieProvider;
     }
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) throws JsonProcessingException {
-        logger.warn("Hello World");
+
         // Check login and password
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
@@ -57,28 +57,23 @@ public class AuthController {
         // Create an object that is stored in the Spring container and contains user data
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        // Еhe password is reset to zero before jwt is generated
+        // Set password to zero before jwt is generated
         userDetails.getUser().setPassword(null);
 
         // Generate and response generated token with status 200
-        String jwt = jwtTokenProvider.generateToken(userDetails.getUser());
+        String jwt = TOKEN_PREFIX + jwtTokenProvider.generateToken(userDetails.getUser());
 
-        // Create cookie with jwt
-        HttpCookie cookie = jwtCookieProvider.createJwtCookie(jwt);
+        // Get user id to return it to frontend
+        Long id = userDetails.getUser().getId();
 
-        // Create header for http response and add cookie
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
-        httpHeaders.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Set-Cookie");
-
-        return ResponseEntity.ok().headers(httpHeaders).body(userDetails.getUser());
+        return ResponseEntity.ok(new JWTSuccessResponse(true, jwt, id));
     }
 
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
         if (userService.userExistsByEmail(request.getEmail())) {
-            return new ResponseEntity<>("User with this email already exists." , HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>("User with this email already exists.", HttpStatus.NOT_ACCEPTABLE);
         }
 
         // Validate by email
@@ -87,23 +82,11 @@ public class AuthController {
         }
         // Validate by password
         if (request.getPassword() == null || request.getPassword().trim().length() == 0 ||
-        request.getPassword().length() < 6) {
+                request.getPassword().length() < 6) {
             return new ResponseEntity<>("Password is not acceptable.", HttpStatus.NOT_ACCEPTABLE);
         }
 
         return ResponseEntity.ok(userService.createUser(request));
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<Object> logout() {
-
-        // create expired cookie
-        HttpCookie cookie = jwtCookieProvider.deleteJwtCookie();
-
-        // create and set headers with a set cookie
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.ok().headers(headers).build();
     }
 
     @PostMapping("/update-password")
