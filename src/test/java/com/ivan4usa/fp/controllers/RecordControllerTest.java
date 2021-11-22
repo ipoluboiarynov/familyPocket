@@ -43,12 +43,12 @@ class RecordControllerTest {
     void findAll() throws Exception {
         // Set up a mocked service
         Record record1 = new Record(1L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
-                new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
+                new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L,
                 null, null);
 
         Record record2 = new Record(2L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-03"),
                 new BigDecimal("3000.00"), "comment", RecordType.TRANSFER, 1L, null,
-                null, null);
+                null);
 
         when(userService.getUserId()).thenReturn(1L);
         doReturn(Lists.newArrayList(record1, record2)).when(service).findAll(1L);
@@ -77,15 +77,14 @@ class RecordControllerTest {
                 .andExpect(jsonPath("$[1].recordType", is("TRANSFER")))
                 .andExpect(jsonPath("$[1].userId", is(1)))
                 .andExpect(jsonPath("$[1].account", is(nullValue())))
-                .andExpect(jsonPath("$[1].category", is(nullValue())))
-                .andExpect(jsonPath("$[1].currency", is(nullValue())));
+                .andExpect(jsonPath("$[1].category", is(nullValue())));
     }
 
     @Test
     void findById() throws Exception {
         Record record = new Record(8L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
-                null, null);
+                null);
         when(userService.getUserId()).thenReturn(1L);
         doReturn(Optional.of(record)).when(service).findById(8L);
         // Execute the POST request
@@ -103,8 +102,7 @@ class RecordControllerTest {
                 .andExpect(jsonPath("$.recordType", is("INCOME")))
                 .andExpect(jsonPath("$.userId", is(1)))
                 .andExpect(jsonPath("$.account", is(nullValue())))
-                .andExpect(jsonPath("$.category", is(nullValue())))
-                .andExpect(jsonPath("$.currency", is(nullValue())));
+                .andExpect(jsonPath("$.category", is(nullValue())));
     }
 
     @Test
@@ -112,10 +110,10 @@ class RecordControllerTest {
         // Set up a mocked service
         Record recordPost = new Record(null, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
-                null, null);
+                null);
         Record recordReturn = new Record(4L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
-                null, null);
+                null);
         when(userService.getUserId()).thenReturn(1L);
         doReturn(recordReturn).when(service).add(any());
         // Execute the POST request
@@ -133,8 +131,7 @@ class RecordControllerTest {
                 .andExpect(jsonPath("$.recordType", is("INCOME")))
                 .andExpect(jsonPath("$.userId", is(1)))
                 .andExpect(jsonPath("$.account", is(nullValue())))
-                .andExpect(jsonPath("$.category", is(nullValue())))
-                .andExpect(jsonPath("$.currency", is(nullValue())));
+                .andExpect(jsonPath("$.category", is(nullValue())));
     }
 
     @Test
@@ -142,15 +139,15 @@ class RecordControllerTest {
         // Set up a mocked service
         Record recordPatch = new Record(3L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
                 new BigDecimal("4000.00"), "comment", RecordType.INCOME, 5L, null,
-                null, null);
+                null);
 
         Record recordFoundById = new Record(3L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
                 new BigDecimal("4000.00"), "comment", RecordType.INCOME, 5L, null,
-                null, null);
+                null);
 
         Record recordReturn = new Record(3L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
                 new BigDecimal("4000.00"), "comment", RecordType.INCOME, 5L, null,
-                null, null);
+                null);
         when(service.findById(3L)).thenReturn(Optional.of(recordFoundById));
         when(userService.getUserId()).thenReturn(5L);
         doReturn(recordReturn).when(service).update(any());
@@ -170,8 +167,7 @@ class RecordControllerTest {
                 .andExpect(jsonPath("$.recordType", is("INCOME")))
                 .andExpect(jsonPath("$.userId", is(5)))
                 .andExpect(jsonPath("$.account", is(nullValue())))
-                .andExpect(jsonPath("$.category", is(nullValue())))
-                .andExpect(jsonPath("$.currency", is(nullValue())));
+                .andExpect(jsonPath("$.category", is(nullValue())));
     }
 
     @Test
@@ -179,7 +175,7 @@ class RecordControllerTest {
         // Set up a mocked service
         Record recordDelete = new Record(5L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
                 new BigDecimal("6000.00"), "comment", RecordType.INCOME, 1L, null,
-                null, null);
+                null);
         when(userService.getUserId()).thenReturn(1L);
         doNothing().when(service).delete(any());
         // Execute the DELETE request

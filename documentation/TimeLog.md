@@ -23,7 +23,15 @@
 | 10/22/21 | Added loading of exchange rates from an external api service and created a test | 2 |  |
 | 10/25/21 | Work on the frontend: on the settings page, loading and displaying all entities, editing and deleting them. | 4 |
 | 10/26/21 | Work on the frontend: on the settings page, loading and displaying all entities, editing and deleting them. | 4 |
-| 10/27/21 | Working with AWS: Downloading the backend repository on AWS and troubleshooting. | 3 |
-| 10/28/21 | Working with AWS: Downloading the backend repository on AWS and troubleshooting. | 3 |
-| 10/29/21 | Working with AWS: Downloading the frontend repository on AWS and troubleshooting. | 3 |
-| 11/01/21 | Work in the front-end: finished the settings page, partially made the dashboard page, started work on the records page | 5 |
+| 10/27/21 | Work with AWS: Downloading the backend repository on AWS and troubleshooting. | 3 |
+| 10/28/21 | Work with AWS: Downloading the backend repository on AWS and troubleshooting. | 3 |
+| 10/29/21 | Work with AWS: Downloading the frontend repository on AWS and troubleshooting. | 3 |
+| 11/01/21 | Work on the front-end: finished the settings page, partially made the dashboard page, started work on the records page | 5 |
+| 11/19/21 | Work on the front-end: started on records page, added records search function by filters | 5 |
+| 11/20/21 | Work on the front-end: completed records page with all filter functions | 4 |
+| 11/21/21 | Work on the front-end: completed dashboard page, added pagination for limiting records | 5 |
+|  |  |  |
+|  |  |  |
+|  |  |  |
+|  |  |  |
+|  |  |  |

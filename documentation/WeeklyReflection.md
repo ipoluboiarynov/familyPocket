@@ -38,3 +38,13 @@ This week I finished the following:
 Difficulties:
 - Had difficulty setting up spring security config;
 - When writing unit tests, I got errors, which took a long time to fix.
+
+### Week 12
+
+This week is dedicated to working on the frontend with minimal backend modifications.
+- completed the settings page
+- completed the records page
+- completed the dashboard page
+- added search function by filter parameters for records
+- added pagination to limit array length with records and also to select last records of limited count
+- work on the layout of the website, in particular the creation of modal windows, tables, filter control buttons, and so on

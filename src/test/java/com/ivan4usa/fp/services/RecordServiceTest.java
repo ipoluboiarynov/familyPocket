@@ -36,16 +36,16 @@ class RecordServiceTest {
         // Set up a mock repository
         Record record1 = new Record(1L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
-                null, null);
+                null);
 
         Record record2 = new Record(2L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-03"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
-                null, null);
+                null);
 
         Record record3 = new Record(3L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-04"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
-                null, null);
-        doReturn(Arrays.asList(record1, record2, record3)).when(repository).findRecordsByUserId(1L);
+                null);
+        doReturn(Arrays.asList(record1, record2, record3)).when(repository).findRecordsByUserIdOrderByRecordDateDesc(1L);
         // Execute the service call
         List<Record> records = service.findAll(1L);
 
@@ -58,7 +58,7 @@ class RecordServiceTest {
         // Set up a mock repository
         Record record = new Record(8L, new SimpleDateFormat("yyyy-MM-dd").parse("2021-07-04"),
                 new BigDecimal("2000.00"), "comment", RecordType.INCOME, 5L, null,
-                null, null);
+                null);
         doReturn(Optional.of(record)).when(repository).findById(8L);
         // Execute the service call
         Optional<Record> returnedRecord = service.findById(8L);
@@ -82,7 +82,7 @@ class RecordServiceTest {
         // Set up a mock repository
         Record newRecord = new Record(1L, new SimpleDateFormat("yyyy-MM-dd").parse("2021-02-02"),
                 new BigDecimal("100.00"), "comment", RecordType.INCOME, 5L, null,
-                null, null);
+                null);
         doReturn(newRecord).when(repository).save(any());
         // Execute the service call
         Record returnedRecord = service.add(newRecord);
@@ -94,7 +94,6 @@ class RecordServiceTest {
         Assertions.assertEquals(new BigDecimal("100.00"), returnedRecord.getAmount(), "The amount should be different");
         Assertions.assertEquals(null, returnedRecord.getAccount(), "The account should be different");
         Assertions.assertEquals(null, returnedRecord.getCategory(), "The category should be different");
-        Assertions.assertEquals(null, returnedRecord.getCurrency(), "The currency should be different");
         Assertions.assertEquals(5L, returnedRecord.getUserId(), "The user id should be different");
     }
 
@@ -103,7 +102,7 @@ class RecordServiceTest {
         // Set up a mock repository
         Record updateRecord = new Record(7L, new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-01"),
                 new BigDecimal("100.00"), "comment", RecordType.TRANSFER, 2L, null,
-                null, null);
+                null);
         doReturn(updateRecord).when(repository).save(any());
         // Execute the service call
         Record returnedRecord = service.update(updateRecord);
@@ -115,7 +114,6 @@ class RecordServiceTest {
         Assertions.assertEquals(new BigDecimal("100.00"), returnedRecord.getAmount(), "The amount should be different");
         Assertions.assertEquals(null, returnedRecord.getAccount(), "The account should be different");
         Assertions.assertEquals(null, returnedRecord.getCategory(), "The category should be different");
-        Assertions.assertEquals(null, returnedRecord.getCurrency(), "The currency should be different");
         Assertions.assertEquals(2L, returnedRecord.getUserId(), "The user id should be different");
     }
 
@@ -124,7 +122,7 @@ class RecordServiceTest {
         // Set up a mock repository
         Record deleteRecord = new Record(4L, new SimpleDateFormat("yyyy-MM-dd").parse("2021-06-08"),
                 new BigDecimal("100.00"), "comment", RecordType.TRANSFER, 2L, null,
-                null, null);
+                null);
         doNothing().when(repository).deleteById(4L);
         // Execute the service call
         service.add(deleteRecord);

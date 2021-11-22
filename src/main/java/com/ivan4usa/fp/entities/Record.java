@@ -48,10 +48,6 @@ public class Record {
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     public Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "currency_id", referencedColumnName = "id", nullable = false)
-    public Currency currency;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

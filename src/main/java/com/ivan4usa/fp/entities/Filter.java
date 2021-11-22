@@ -35,9 +35,12 @@ public class Filter {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Transient
+    private Integer limit;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "record_type", length = 8)
-    private RecordType recordType;
+    private transient RecordType recordType;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "accounts_for_filter", joinColumns = @JoinColumn(name = "filter_id"),

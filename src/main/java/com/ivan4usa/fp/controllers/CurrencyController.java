@@ -122,6 +122,6 @@ public class CurrencyController {
 
     @PostMapping("rates")
     public ResponseEntity<Rates> updateRates(@RequestBody String date) throws IOException {
-        return ResponseEntity.ok(ratesService.loadRatesByDateRapid(date));
+        return ResponseEntity.ok(ratesService.loadRatesByDateFixer(date));
     }
 }

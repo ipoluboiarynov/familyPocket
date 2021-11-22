@@ -1,19 +1,25 @@
 package com.ivan4usa.fp.controllers;
 
+import com.ivan4usa.fp.entities.Account;
+import com.ivan4usa.fp.entities.Category;
+import com.ivan4usa.fp.entities.Filter;
 import com.ivan4usa.fp.entities.Record;
+import com.ivan4usa.fp.enums.RecordType;
+import com.ivan4usa.fp.search.RecordSearchValues;
 import com.ivan4usa.fp.services.RecordService;
 import com.ivan4usa.fp.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -38,6 +44,37 @@ public class RecordController {
             return new ResponseEntity("Record is not match to user id", HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.findAll(userId));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<Page<Record>> search(@RequestBody RecordSearchValues searchValues) {
+        Long userId = this.userService.getUserId();
+        RecordType recordType = searchValues.getFilter().getRecordType() != null ? searchValues.getFilter().getRecordType() : null;
+        Date startDate = searchValues.getFilter().getStartDate() != null ? searchValues.getFilter().getStartDate() : null;
+        Date endDate = searchValues.getFilter().getEndDate() != null ? searchValues.getFilter().getEndDate() : null;
+        List<Long> account_ids = new ArrayList<>();
+        if (searchValues.getFilter().getAccounts().size() > 0) {
+            for (Account account: searchValues.getFilter().getAccounts()) {
+                account_ids.add(account.getId());
+            }
+        } else {
+            account_ids = null;
+        }
+        List<Long> category_ids = new ArrayList<>();
+        if (searchValues.getFilter().getCategories().size() > 0) {
+            for (Category category: searchValues.getFilter().getCategories()) {
+                category_ids.add(category.getId());
+            }
+        } else {
+            category_ids = null;
+        }
+        int pageSize = searchValues.getPageParams().getPageSize() != null ? searchValues.getPageParams().getPageSize()
+                : 100;
+        int pageNumber = searchValues.getPageParams().getPageNumber() != null ? searchValues.getPageParams().getPageNumber()
+                : 0;
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        return ResponseEntity.ok(service.search(recordType, startDate, endDate, userId, account_ids, category_ids, pageRequest));
     }
 
     @PostMapping("/id")
