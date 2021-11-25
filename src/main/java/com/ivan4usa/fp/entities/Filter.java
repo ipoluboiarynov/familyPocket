@@ -35,9 +35,6 @@ public class Filter {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Transient
-    private Integer limit;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "record_type", length = 8)
     private transient RecordType recordType;

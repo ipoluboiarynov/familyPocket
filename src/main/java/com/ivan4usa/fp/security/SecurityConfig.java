@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -52,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Method sets global CORS rules
+     *
      * @return
      */
     @Bean
@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Method for encoding the password
+     *
      * @return BCryptPasswordEncoder object
      */
     @Bean
@@ -80,6 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Authentication manager for checkin login ang password of user in database
+     *
      * @return authentication manager object
      * @throws Exception any exception
      */
@@ -91,6 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Override method for checking if user existing in database throw the customUserDetailsService service
+     *
      * @param auth AuthenticationManagerBuilder object
      * @throws Exception any exception while doing this method
      */
@@ -103,6 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Method to disable the call to the AuthTokenFilter filter for the container servlet
      * (so that the filter is not called 2 times, but only once from the Spring container)
      * https://stackoverflow.com/questions/39314176/filter-invoke-twice-when-register-as-spring-bean
+     *
      * @param filter - JWT Authentication Filter parameter
      * @return registration
      */
@@ -115,6 +119,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Configurstion for http requests
+     *
      * @param http HttpSecurity object
      * @throws Exception any exception
      */
