@@ -48,3 +48,11 @@ This week is dedicated to working on the frontend with minimal backend modificat
 - added search function by filter parameters for records
 - added pagination to limit array length with records and also to select last records of limited count
 - work on the layout of the website, in particular the creation of modal windows, tables, filter control buttons, and so on
+
+### Week 13
+
+A lot of work has been done on the frontend this week:
+- a personal sidebar with functionality has been made for each page;
+- improved functionality for converting dates into string format;
+- created the ability to transfer money between accounts with the completion of the backend;
+- added the ability to keep accounts in different currencies with their conversion in statistics and when exchanging between accounts.

@@ -12,6 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -79,7 +80,7 @@ class AccountServiceTest {
         account.setIcon("icon");
         account.setColor("color");
         account.setCreditLimit(new BigDecimal("1000.00"));
-        account.setStartDate(new Date());
+        account.setStartDate(LocalDate.now());
         account.setStartBalance(new BigDecimal("1.00"));
         account.setUserId(1L);
         BigDecimal balance = new BigDecimal("1000.00");

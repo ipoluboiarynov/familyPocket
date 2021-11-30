@@ -13,6 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,12 +37,12 @@ class FilterServiceTest {
     @Test
     void findAll() throws ParseException {
         // Set up a mock repository
-        Filter filter1 = new Filter(1L, "Filter 1", new SimpleDateFormat("yyyy-MM-dd").parse("2021-02-14"),
-                new SimpleDateFormat("yyyy-MM-dd").parse("2021-03-14"), 2L, RecordType.EXPENSE, new ArrayList<>(), new ArrayList<>());
-        Filter filter2 = new Filter(2L, "Filter 2", new SimpleDateFormat("yyyy-MM-dd").parse("2021-02-14"),
-                new SimpleDateFormat("yyyy-MM-dd").parse("2021-03-14"), 2L, RecordType.INCOME, new ArrayList<>(), new ArrayList<>());
-        Filter filter3 = new Filter(3L, "Filter 3", new SimpleDateFormat("yyyy-MM-dd").parse("2021-02-14"),
-                new SimpleDateFormat("yyyy-MM-dd").parse("2021-03-14"), 2L, RecordType.EXPENSE, new ArrayList<>(), new ArrayList<>());
+        Filter filter1 = new Filter(1L, "Filter 1", LocalDate.parse("2021-02-14"),
+                LocalDate.parse("2021-03-14"), 2L, RecordType.EXPENSE, new ArrayList<>(), new ArrayList<>());
+        Filter filter2 = new Filter(2L, "Filter 2", LocalDate.parse("2021-02-14"),
+                LocalDate.parse("2021-03-14"), 2L, RecordType.INCOME, new ArrayList<>(), new ArrayList<>());
+        Filter filter3 = new Filter(3L, "Filter 3", LocalDate.parse("2021-02-14"),
+                LocalDate.parse("2021-03-14"), 2L, RecordType.EXPENSE, new ArrayList<>(), new ArrayList<>());
         doReturn(Arrays.asList(filter1, filter2, filter3)).when(repository).findFiltersByUserId(2L);
         // Execute the service call
         List<Filter> filters = service.findAll(2L);
@@ -90,7 +91,7 @@ class FilterServiceTest {
     @Test
     void update() {
         // Set up a mock repository
-        Filter filter = new Filter(2L, "Filter Test", null, null, 2L, RecordType.TRANSFER, new ArrayList<>(), new ArrayList<>());
+        Filter filter = new Filter(2L, "Filter Test", null, null, 2L, RecordType.TR_IN, new ArrayList<>(), new ArrayList<>());
         doReturn(filter).when(repository).save(any());
         // Execute the service call
         Filter returnedFilter = service.update(filter);
@@ -100,7 +101,7 @@ class FilterServiceTest {
         Assertions.assertEquals(null, returnedFilter.getStartDate(), "The starting date should be different");
         Assertions.assertEquals(null, returnedFilter.getEndDate(), "The end date should be different");
         Assertions.assertEquals(2L, returnedFilter.getUserId(), "The user id should be different");
-        Assertions.assertEquals(RecordType.TRANSFER, returnedFilter.getRecordType(), "The record type should be different");
+        Assertions.assertEquals(RecordType.TR_IN, returnedFilter.getRecordType(), "The record type should be different");
         Assertions.assertEquals(new ArrayList<>(), returnedFilter.getAccounts(), "The accounts should be different");
         Assertions.assertEquals(new ArrayList<>(), returnedFilter.getCategories(), "The categories should be different");
     }
@@ -108,7 +109,7 @@ class FilterServiceTest {
     @Test
     void delete() {
         // Set up a mock repository
-        Filter filter = new Filter(4L, "Filter Delete", null, null, 5L, RecordType.TRANSFER, new ArrayList<>(), new ArrayList<>());
+        Filter filter = new Filter(4L, "Filter Delete", null, null, 5L, RecordType.TR_IN, new ArrayList<>(), new ArrayList<>());
         doNothing().when(repository).deleteById(4L);
         // Execute the service call
         service.add(filter);

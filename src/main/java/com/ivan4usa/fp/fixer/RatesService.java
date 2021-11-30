@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -38,7 +39,14 @@ public class RatesService {
 
         Response response = client.newCall(request).execute();
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(response.body().string(), Rates.class);
+        Rates rates =  mapper.readValue(response.body().string(), Rates.class);
+        Map<String, Double> list = rates.getRates();
+        Double base = list.get("USD");
+        for (Map.Entry<String, Double> entry : list.entrySet()) {
+            entry.setValue(entry.getValue() / base);
+        }
+        rates.setRates(list);
+        return rates;
     }
 
     public Rates loadRatesByDateRapid(String date) throws IOException {

@@ -9,7 +9,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -25,7 +25,7 @@ public class Record {
     private Long id;
 
     @Column(name = "record_date", nullable = false)
-    private Date recordDate;
+    private LocalDate recordDate;
 
     @Column(name = "amount", nullable = false, precision = 2)
     private BigDecimal amount;
@@ -45,7 +45,7 @@ public class Record {
     public Account account;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = true)
     public Category category;
 
     @Override

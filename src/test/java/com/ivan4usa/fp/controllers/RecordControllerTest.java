@@ -1,6 +1,10 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.ivan4usa.fp.entities.Record;
 import com.ivan4usa.fp.enums.RecordType;
 import com.ivan4usa.fp.services.RecordService;
@@ -17,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -42,12 +46,12 @@ class RecordControllerTest {
     @Test
     void findAll() throws Exception {
         // Set up a mocked service
-        Record record1 = new Record(1L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record record1 = new Record(1L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L,
                 null, null);
 
-        Record record2 = new Record(2L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-03"),
-                new BigDecimal("3000.00"), "comment", RecordType.TRANSFER, 1L, null,
+        Record record2 = new Record(2L, LocalDate.parse("2020-04-03"),
+                new BigDecimal("3000.00"), "comment", RecordType.TR_IN, 1L, null,
                 null);
 
         when(userService.getUserId()).thenReturn(1L);
@@ -62,19 +66,18 @@ class RecordControllerTest {
                 // Validate the returned fields
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].recordDate", is("2020-04-02T05:00:00.000+00:00")))
+                .andExpect(jsonPath("$[0].recordDate", is("2020-04-02")))
                 .andExpect(jsonPath("$[0].amount", is(1000.00)))
                 .andExpect(jsonPath("$[0].comment", is("comment")))
                 .andExpect(jsonPath("$[0].recordType", is("INCOME")))
                 .andExpect(jsonPath("$[0].userId", is(1)))
                 .andExpect(jsonPath("$[0].account", is(nullValue())))
                 .andExpect(jsonPath("$[0].category", is(nullValue())))
-                .andExpect(jsonPath("$[0].currency", is(nullValue())))
                 .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].recordDate", is("2020-04-03T05:00:00.000+00:00")))
+                .andExpect(jsonPath("$[1].recordDate", is("2020-04-03")))
                 .andExpect(jsonPath("$[1].amount", is(3000.00)))
                 .andExpect(jsonPath("$[1].comment", is("comment")))
-                .andExpect(jsonPath("$[1].recordType", is("TRANSFER")))
+                .andExpect(jsonPath("$[1].recordType", is("TR_IN")))
                 .andExpect(jsonPath("$[1].userId", is(1)))
                 .andExpect(jsonPath("$[1].account", is(nullValue())))
                 .andExpect(jsonPath("$[1].category", is(nullValue())));
@@ -82,7 +85,7 @@ class RecordControllerTest {
 
     @Test
     void findById() throws Exception {
-        Record record = new Record(8L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record record = new Record(8L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
                 null);
         when(userService.getUserId()).thenReturn(1L);
@@ -96,7 +99,7 @@ class RecordControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(8)))
-                .andExpect(jsonPath("$.recordDate", is("2020-04-02T05:00:00.000+00:00")))
+                .andExpect(jsonPath("$.recordDate", is("2020-04-02")))
                 .andExpect(jsonPath("$.amount", is(1000.00)))
                 .andExpect(jsonPath("$.comment", is("comment")))
                 .andExpect(jsonPath("$.recordType", is("INCOME")))
@@ -108,10 +111,10 @@ class RecordControllerTest {
     @Test
     void add() throws Exception {
         // Set up a mocked service
-        Record recordPost = new Record(null, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record recordPost = new Record(null, LocalDate.parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
                 null);
-        Record recordReturn = new Record(4L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record recordReturn = new Record(4L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
                 null);
         when(userService.getUserId()).thenReturn(1L);
@@ -125,7 +128,7 @@ class RecordControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(4)))
-                .andExpect(jsonPath("$.recordDate", is("2020-04-02T05:00:00.000+00:00")))
+                .andExpect(jsonPath("$.recordDate", is("2020-04-02")))
                 .andExpect(jsonPath("$.amount", is(1000.00)))
                 .andExpect(jsonPath("$.comment", is("comment")))
                 .andExpect(jsonPath("$.recordType", is("INCOME")))
@@ -137,15 +140,15 @@ class RecordControllerTest {
     @Test
     void update() throws Exception {
         // Set up a mocked service
-        Record recordPatch = new Record(3L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record recordPatch = new Record(3L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("4000.00"), "comment", RecordType.INCOME, 5L, null,
                 null);
 
-        Record recordFoundById = new Record(3L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record recordFoundById = new Record(3L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("4000.00"), "comment", RecordType.INCOME, 5L, null,
                 null);
 
-        Record recordReturn = new Record(3L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record recordReturn = new Record(3L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("4000.00"), "comment", RecordType.INCOME, 5L, null,
                 null);
         when(service.findById(3L)).thenReturn(Optional.of(recordFoundById));
@@ -161,7 +164,7 @@ class RecordControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(3)))
-                .andExpect(jsonPath("$.recordDate", is("2020-04-02T05:00:00.000+00:00")))
+                .andExpect(jsonPath("$.recordDate", is("2020-04-02")))
                 .andExpect(jsonPath("$.amount", is(4000.00)))
                 .andExpect(jsonPath("$.comment", is("comment")))
                 .andExpect(jsonPath("$.recordType", is("INCOME")))
@@ -173,7 +176,7 @@ class RecordControllerTest {
     @Test
     void delete() throws Exception {
         // Set up a mocked service
-        Record recordDelete = new Record(5L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record recordDelete = new Record(5L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("6000.00"), "comment", RecordType.INCOME, 1L, null,
                 null);
         when(userService.getUserId()).thenReturn(1L);
@@ -190,7 +193,12 @@ class RecordControllerTest {
 
     static String asJsonString(final Object obj) {
         try {
-            return new ObjectMapper().writeValueAsString(obj);
+            ObjectMapper mapper = JsonMapper.builder()
+                    .addModule(new ParameterNamesModule())
+                    .addModule(new Jdk8Module())
+                    .addModule(new JavaTimeModule())
+                    .build();
+            return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -30,8 +30,9 @@
 | 11/19/21 | Work on the front-end: started on records page, added records search function by filters | 5 |
 | 11/20/21 | Work on the front-end: completed records page with all filter functions | 4 |
 | 11/21/21 | Work on the front-end: completed dashboard page, added pagination for limiting records | 5 |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| 11/23/21 | Work on the front-end: sidebar for dashboard and records | 5 |
+| 11/24/21 | Work on the front-end: sidebar for statistics and settings | 4 |
+| 11/26/21 | Work on the front-end: multi currency accounts | 5 |
+| 11/27/21 | Work on the front-end: fixed date converting (changed Date to LocalDate on backend) | 4 |
+| 11/28/21 | Work on the front-end: trouble shootings | 3 |
+| 11/29/21 | Work on the front-end + backend: added transfer between accounts (all functionality) | 8 |

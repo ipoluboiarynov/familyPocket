@@ -20,8 +20,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findAccountById(@Param("id") Long id);
 
     @Query(value = "SELECT ((CASE WHEN a.start_date <= cast(:date as date) THEN a.start_balance ELSE 0 END) + " +
-            "SUM(CASE WHEN r.record_type = 'INCOME' AND r.record_date <= cast(:date as date) THEN r.amount ELSE 0 END) - " +
-            "SUM(CASE WHEN r.record_type = 'EXPENSE' AND r.record_date <= cast(:date as date) THEN r.amount ELSE 0 END)) " +
+            "SUM(CASE WHEN (r.record_type = 'INCOME' OR r.record_type = 'TR_IN') AND r.record_date <= cast(:date as date) THEN r.amount ELSE 0 END) - " +
+            "SUM(CASE WHEN (r.record_type = 'EXPENSE' OR r.record_type = 'TR_OUT') AND r.record_date <= cast(:date as date) THEN r.amount ELSE 0 END)) " +
             "AS balance FROM fp_db.account AS a LEFT JOIN fp_db.record AS r ON a.id = r.account_id WHERE a.id=:id " +
             "GROUP BY a.start_date, a.start_balance",
     nativeQuery = true)

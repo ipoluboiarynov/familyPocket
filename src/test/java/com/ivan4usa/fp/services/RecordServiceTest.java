@@ -14,6 +14,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -36,15 +37,15 @@ class RecordServiceTest {
     @Test
     void findAll() throws ParseException {
         // Set up a mock repository
-        Record record1 = new Record(1L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-02"),
+        Record record1 = new Record(1L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
                 null);
 
-        Record record2 = new Record(2L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-03"),
+        Record record2 = new Record(2L, LocalDate.parse("2020-04-03"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
                 null);
 
-        Record record3 = new Record(3L, new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-04"),
+        Record record3 = new Record(3L, LocalDate.parse("2020-04-04"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
                 null);
         doReturn(Arrays.asList(record1, record2, record3)).when(repository).findRecordsByUserIdOrderByRecordDateDesc(1L);
@@ -58,7 +59,7 @@ class RecordServiceTest {
     @Test
     void findById() throws ParseException {
         // Set up a mock repository
-        Record record = new Record(8L, new SimpleDateFormat("yyyy-MM-dd").parse("2021-07-04"),
+        Record record = new Record(8L, LocalDate.parse("2021-07-04"),
                 new BigDecimal("2000.00"), "comment", RecordType.INCOME, 5L, null,
                 null);
         doReturn(Optional.of(record)).when(repository).findById(8L);
@@ -82,7 +83,7 @@ class RecordServiceTest {
     @Test
     void add() throws ParseException {
         // Set up a mock repository
-        Record newRecord = new Record(1L, new SimpleDateFormat("yyyy-MM-dd").parse("2021-02-02"),
+        Record newRecord = new Record(1L, LocalDate.parse("2021-02-02"),
                 new BigDecimal("100.00"), "comment", RecordType.INCOME, 5L, null,
                 null);
         doReturn(newRecord).when(repository).save(any());
@@ -90,7 +91,7 @@ class RecordServiceTest {
         Record returnedRecord = service.add(newRecord);
         // Assert the response
         Assertions.assertNotNull(returnedRecord, "The saved record should not be null");
-        Assertions.assertEquals(new SimpleDateFormat("yyyy-MM-dd").parse("2021-02-02"), returnedRecord.getRecordDate(), "The name should be different");
+        Assertions.assertEquals(LocalDate.parse("2021-02-02"), returnedRecord.getRecordDate(), "The name should be different");
         Assertions.assertEquals(RecordType.INCOME, returnedRecord.getRecordType(), "The record type should be different");
         Assertions.assertEquals("comment", returnedRecord.getComment(), "The comment should be different");
         Assertions.assertEquals(new BigDecimal("100.00"), returnedRecord.getAmount(), "The amount should be different");
@@ -102,16 +103,16 @@ class RecordServiceTest {
     @Test
     void update() throws ParseException {
         // Set up a mock repository
-        Record updateRecord = new Record(7L, new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-01"),
-                new BigDecimal("100.00"), "comment", RecordType.TRANSFER, 2L, null,
+        Record updateRecord = new Record(7L, LocalDate.parse("2021-01-01"),
+                new BigDecimal("100.00"), "comment", RecordType.TR_IN, 2L, null,
                 null);
         doReturn(updateRecord).when(repository).save(any());
         // Execute the service call
         Record returnedRecord = service.update(updateRecord);
         // Assert the response
         Assertions.assertNotNull(returnedRecord, "The saved record should not be null");
-        Assertions.assertEquals(new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-01"), returnedRecord.getRecordDate(), "The name should be different");
-        Assertions.assertEquals(RecordType.TRANSFER, returnedRecord.getRecordType(), "The record type should be different");
+        Assertions.assertEquals(LocalDate.parse("2021-01-01"), returnedRecord.getRecordDate(), "The name should be different");
+        Assertions.assertEquals(RecordType.TR_IN, returnedRecord.getRecordType(), "The record type should be different");
         Assertions.assertEquals("comment", returnedRecord.getComment(), "The comment should be different");
         Assertions.assertEquals(new BigDecimal("100.00"), returnedRecord.getAmount(), "The amount should be different");
         Assertions.assertEquals(null, returnedRecord.getAccount(), "The account should be different");
@@ -122,8 +123,8 @@ class RecordServiceTest {
     @Test
     void delete() throws ParseException {
         // Set up a mock repository
-        Record deleteRecord = new Record(4L, new SimpleDateFormat("yyyy-MM-dd").parse("2021-06-08"),
-                new BigDecimal("100.00"), "comment", RecordType.TRANSFER, 2L, null,
+        Record deleteRecord = new Record(4L, LocalDate.parse("2021-06-08"),
+                new BigDecimal("100.00"), "comment", RecordType.TR_IN, 2L, null,
                 null);
         doNothing().when(repository).deleteById(4L);
         // Execute the service call

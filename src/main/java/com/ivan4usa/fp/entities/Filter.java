@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,17 +28,17 @@ public class Filter {
     private String name;
 
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "record_type", length = 8)
-    private transient RecordType recordType;
+    private RecordType recordType;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "accounts_for_filter", joinColumns = @JoinColumn(name = "filter_id"),

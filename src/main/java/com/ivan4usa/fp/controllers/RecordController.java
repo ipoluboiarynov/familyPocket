@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @CrossOrigin
@@ -46,12 +47,22 @@ public class RecordController {
         return ResponseEntity.ok(service.findAll(userId));
     }
 
+    @PostMapping("/total")
+    public ResponseEntity<Integer> getTotalNumber(@RequestBody Long userId) {
+        Long checkUserId = this.userService.getUserId();
+        if (!Objects.equals(checkUserId, userId)) {
+            logger.error("Record is not match to user id of " + userId);
+            return new ResponseEntity("Record is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+        }
+        return ResponseEntity.ok(service.getTotalNumber(userId));
+    }
+
     @PostMapping("/search")
     public ResponseEntity<Page<Record>> search(@RequestBody RecordSearchValues searchValues) {
         Long userId = this.userService.getUserId();
         RecordType recordType = searchValues.getFilter().getRecordType() != null ? searchValues.getFilter().getRecordType() : null;
-        Date startDate = searchValues.getFilter().getStartDate() != null ? searchValues.getFilter().getStartDate() : null;
-        Date endDate = searchValues.getFilter().getEndDate() != null ? searchValues.getFilter().getEndDate() : null;
+        LocalDate startDate = searchValues.getFilter().getStartDate() != null ? searchValues.getFilter().getStartDate() : null;
+        LocalDate endDate = searchValues.getFilter().getEndDate() != null ? searchValues.getFilter().getEndDate() : null;
         List<Long> account_ids = new ArrayList<>();
         if (searchValues.getFilter().getAccounts().size() > 0) {
             for (Account account: searchValues.getFilter().getAccounts()) {
@@ -114,6 +125,45 @@ public class RecordController {
         return ResponseEntity.ok(service.add(record));
     }
 
+    @PostMapping("/transfer/add")
+    public ResponseEntity<Record[]> addTransfer(@RequestBody ArrayList<Record> records) {
+        Long userId = this.userService.getUserId();
+        Record recordFromAccount = records.get(0);
+        Record recordToAccount = records.get(1);
+
+        if (recordFromAccount.getId() != null && recordFromAccount.getId() != 0 &&
+                recordToAccount.getId() != null && recordToAccount.getId() != 0) {
+            logger.error("Record id must be null");
+            return new ResponseEntity("Record id must be null", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if (recordFromAccount.getRecordDate() == null ||
+                recordFromAccount.getAmount() == null ||
+                recordFromAccount.getRecordType() == null ||
+                recordFromAccount.getUserId() == null) {
+            logger.error("Some fields of record from account are empty");
+            return new ResponseEntity("Some fields of record from accountare empty", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if (recordToAccount.getRecordDate() == null ||
+                recordToAccount.getAmount() == null ||
+                recordToAccount.getRecordType() == null ||
+                recordToAccount.getUserId() == null) {
+            logger.error("Some fields of record to account are empty");
+            return new ResponseEntity("Some fields of record to account are empty", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if (!Objects.equals(recordFromAccount.getUserId(), userId)) {
+            return new ResponseEntity("Record from account is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if (!Objects.equals(recordToAccount.getUserId(), userId)) {
+            return new ResponseEntity("Record to account is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(service.addTransfer(recordFromAccount, recordToAccount));
+    }
+
     @PatchMapping("/update")
     public ResponseEntity<Record> update(@RequestBody Record record) {
         Long userId = this.userService.getUserId();
@@ -139,7 +189,7 @@ public class RecordController {
         return ResponseEntity.ok(service.update(record));
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Record> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
             return new ResponseEntity("id missed", HttpStatus.NOT_ACCEPTABLE);

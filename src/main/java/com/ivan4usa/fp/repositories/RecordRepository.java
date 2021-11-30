@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -25,11 +26,14 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "order by r.recordDate desc, r.id desc"
     )
     Page<Record> search(@Param("recordType") RecordType recordType,
-                        @Param("startDate") Date startDate,
-                        @Param("endDate") Date endDate,
+                        @Param("startDate") LocalDate startDate,
+                        @Param("endDate") LocalDate endDate,
                         @Param("userId") Long userId,
                         @Param("account_ids") List<Long> account_ids,
                         @Param("category_ids") List<Long> category_ids,
                         Pageable pageable
     );
+
+    @Query("select count(*) from Record r where r.userId = :userId")
+    Integer getTotalNumber(@Param("userId") Long userId);
 }

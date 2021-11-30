@@ -59,7 +59,6 @@ public class FilterController {
 
     @PostMapping("/add")
     public ResponseEntity<Filter> add(@RequestBody Filter filter) {
-        System.out.println(filter.getStartDate());
         Long userId = this.userService.getUserId();
         if (filter.getId() != null && filter.getId() != 0) {
             logger.error("filter id must be null");

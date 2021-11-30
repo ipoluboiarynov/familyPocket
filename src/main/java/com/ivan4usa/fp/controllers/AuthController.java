@@ -29,7 +29,6 @@ public class AuthController {
     private final JWTTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private final Logger logger = LogManager.getLogger(this.getClass());
 
     @Value("${jwt.auth.token_prefix}")
     private String TOKEN_PREFIX;

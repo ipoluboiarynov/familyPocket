@@ -1,12 +1,14 @@
 package com.ivan4usa.fp.fixer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ivan4usa.fp.services.AccountService;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
@@ -16,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource(locations = {"classpath:application.properties"})
+@ContextConfiguration(classes = RatesService.class)
 public class RatesServiceTest {
     @Value("${fixer.host}")
     private String fixerHost;

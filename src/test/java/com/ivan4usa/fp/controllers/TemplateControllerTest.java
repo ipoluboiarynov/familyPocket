@@ -45,7 +45,7 @@ class TemplateControllerTest {
         Template template1 = new Template(1L, "Template 1", new BigDecimal("1000.00"), 5L, RecordType.EXPENSE,
                 null, null);
 
-        Template template2 = new Template(2L, "Template 2", new BigDecimal("2000.00"), 5L, RecordType.TRANSFER,
+        Template template2 = new Template(2L, "Template 2", new BigDecimal("2000.00"), 5L, RecordType.TR_IN,
                 null, null);
 
         when(userService.getUserId()).thenReturn(5L);
@@ -70,7 +70,7 @@ class TemplateControllerTest {
                 .andExpect(jsonPath("$[1].name", is("Template 2")))
                 .andExpect(jsonPath("$[1].amount", is(2000.00)))
                 .andExpect(jsonPath("$[1].userId", is(5)))
-                .andExpect(jsonPath("$[1].recordType", is("TRANSFER")))
+                .andExpect(jsonPath("$[1].recordType", is("TR_IN")))
                 .andExpect(jsonPath("$[1].category", is(nullValue())))
                 .andExpect(jsonPath("$[1].account", is(nullValue())));
     }
