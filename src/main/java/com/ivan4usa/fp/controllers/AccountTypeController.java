@@ -9,12 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * The controller that receives requests for operations on AccountType
+ */
+@Controller
+@EnableWebMvc
 @CrossOrigin
 @RestController
 @RequestMapping("/api/account-type")
@@ -23,12 +30,22 @@ public class AccountTypeController {
     private final AccountTypeService service;
     private final UserService userService;
 
+    /**
+     * Constructor for class
+     * @param service of UserService
+     * @param userService of UserService
+     */
     @Autowired
     public AccountTypeController(AccountTypeService service, UserService userService) {
         this.service = service;
         this.userService = userService;
     }
 
+    /**
+     * Get all account types by user id
+     * @param userId id of user
+     * @return response with found account types for user
+     */
     @PostMapping("/all")
     public ResponseEntity<List<AccountType>> findAll(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
@@ -39,6 +56,11 @@ public class AccountTypeController {
         return ResponseEntity.ok(service.findAll(userId));
     }
 
+    /**
+     * Get account type by id
+     * @param id of account type
+     * @return response with found account type
+     */
     @PostMapping("/id")
     public ResponseEntity<AccountType> findById(@RequestBody Long id) {
         Long userId = this.userService.getUserId();
@@ -56,6 +78,11 @@ public class AccountTypeController {
         return ResponseEntity.ok(accountType);
     }
 
+    /**
+     * Add new account type
+     * @param accountType new account type
+     * @return response with saved account type
+     */
     @PostMapping("/add")
     public ResponseEntity<AccountType> add(@RequestBody AccountType accountType) {
         Long userId = this.userService.getUserId();
@@ -74,6 +101,11 @@ public class AccountTypeController {
         return ResponseEntity.ok(service.add(accountType));
     }
 
+    /**
+     * Update existing account type
+     * @param accountType existing account type with new data
+     * @return response with updated account type
+     */
     @PatchMapping("/update")
     public ResponseEntity<AccountType> update(@RequestBody AccountType accountType) {
         Long userId = this.userService.getUserId();
@@ -96,6 +128,11 @@ public class AccountTypeController {
         return ResponseEntity.ok(service.update(accountType));
     }
 
+    /**
+     * Delete existing account type
+     * @param id of account type that should be deleted
+     * @return response with 200 status
+     */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<AccountType> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {

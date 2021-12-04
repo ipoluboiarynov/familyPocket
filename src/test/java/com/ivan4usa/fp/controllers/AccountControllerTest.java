@@ -1,10 +1,15 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.ivan4usa.fp.entities.Account;
 import com.ivan4usa.fp.repositories.AccountRepository;
 import com.ivan4usa.fp.services.AccountService;
 import com.ivan4usa.fp.services.UserService;
+import com.ivan4usa.fp.wrappers.IdAndDate;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +17,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -30,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-local.properties")
 @AutoConfigureMockMvc(addFilters = false)
+@ContextConfiguration(classes = AccountController.class)
 class AccountControllerTest {
 
     @MockBean
@@ -54,6 +63,7 @@ class AccountControllerTest {
         account1.setColor("color");
         account1.setCreditLimit(new BigDecimal("1000.00"));
         account1.setStartBalance(new BigDecimal("0.00"));
+        account1.setStartDate(LocalDate.parse("2021-01-01"));
         account1.setUserId(5L);
         account1.setBalance(new BigDecimal("1000.00"));
 
@@ -64,38 +74,47 @@ class AccountControllerTest {
         account2.setColor("color2");
         account2.setCreditLimit(new BigDecimal("2000.00"));
         account2.setStartBalance(new BigDecimal("10.00"));
+        account2.setStartDate(LocalDate.parse("2021-01-01"));
         account2.setUserId(5L);
         account1.setBalance(new BigDecimal("2000.00"));
+
+        IdAndDate idAndDate = new IdAndDate();
+        idAndDate.setId(5L);
+        idAndDate.setDate("2021-01-01");
 
         when(userService.getUserId()).thenReturn(5L);
         doReturn(Optional.of(account1)).when(repository).findAccountById(1L);
         doReturn(Optional.of(account2)).when(repository).findAccountById(2L);
-        doReturn(Lists.newArrayList(account1, account2)).when(service).findAll(5L, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
+        doReturn(Lists.newArrayList(account1, account2)).when(service).findAll(5L, "2021-01-01");
 
         // Execute the POST request
         mockMvc.perform(MockMvcRequestBuilders.post("/api/account/all")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(5L)))
+                        .content(asJsonString(idAndDate)))
                 // Validate the response code and content type
-                .andExpect(status().is4xxClientError());
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                // Validate the returned fields
-//                .andExpect(jsonPath("$", hasSize(2)))
-//                .andExpect(jsonPath("$[0].id", is(1)))
-//                .andExpect(jsonPath("$[0].name", is("Account 1")))
-//                .andExpect(jsonPath("$[0].icon", is("icon")))
-//                .andExpect(jsonPath("$[0].color", is("color")))
-//                .andExpect(jsonPath("$[0].creditLimit", is(1000.00)))
-//                .andExpect(jsonPath("$[0].startBalance", is(0.00)))
-//                .andExpect(jsonPath("$[0].userId", is(5)))
-//                .andExpect(jsonPath("$[1].id", is(2)))
-//                .andExpect(jsonPath("$[1].name", is("Account 2")))
-//                .andExpect(jsonPath("$[1].icon", is("icon2")))
-//                .andExpect(jsonPath("$[1].color", is("color2")))
-//                .andExpect(jsonPath("$[1].creditLimit", is(2000.00)))
-//                .andExpect(jsonPath("$[1].startBalance", is(10.00)))
-//                .andExpect(jsonPath("$[1].userId", is(5)));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                // Validate the returned fields
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("Account 1")))
+                .andExpect(jsonPath("$[0].icon", is("icon")))
+                .andExpect(jsonPath("$[0].color", is("color")))
+                .andExpect(jsonPath("$[0].creditLimit", is(1000.00)))
+                .andExpect(jsonPath("$[0].startBalance", is(0.00)))
+                .andExpect(jsonPath("$[0].startDate[0]", is(2021)))
+                .andExpect(jsonPath("$[0].startDate[1]", is(1)))
+                .andExpect(jsonPath("$[0].startDate[2]", is(1)))
+                .andExpect(jsonPath("$[0].userId", is(5)))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].name", is("Account 2")))
+                .andExpect(jsonPath("$[1].icon", is("icon2")))
+                .andExpect(jsonPath("$[1].color", is("color2")))
+                .andExpect(jsonPath("$[1].creditLimit", is(2000.00)))
+                .andExpect(jsonPath("$[1].startBalance", is(10.00)))
+                .andExpect(jsonPath("$[1].startDate[0]", is(2021)))
+                .andExpect(jsonPath("$[1].startDate[1]", is(1)))
+                .andExpect(jsonPath("$[1].startDate[2]", is(1)))
+                .andExpect(jsonPath("$[1].userId", is(5)));
     }
 
     @Test
@@ -106,27 +125,34 @@ class AccountControllerTest {
         account.setName("Account 1");
         account.setIcon("icon");
         account.setColor("color");
+        account.setStartDate(LocalDate.parse("2021-01-01"));
         account.setCreditLimit(new BigDecimal("1000.00"));
         account.setStartBalance(new BigDecimal("0.00"));
         account.setUserId(7L);
 
+        IdAndDate idAndDate = new IdAndDate();
+        idAndDate.setId(1L);
+        idAndDate.setDate("2021-09-01");
+
         when(userService.getUserId()).thenReturn(7L);
-        doReturn(Optional.of(account)).when(service).findById(7L, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        doReturn(Optional.of(account)).when(service).findById(1L, "2021-09-01");
         // Execute the POST request
         mockMvc.perform(MockMvcRequestBuilders.post("/api/account/id")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(7L)))
+                        .content(asJsonString(idAndDate)))
                 // Validate the response code and content type
-                .andExpect(status().is4xxClientError());
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                // Validate the returned fields
-//                .andExpect(jsonPath("$.id", is(1)))
-//                .andExpect(jsonPath("$.name", is("Account 1")))
-//                .andExpect(jsonPath("$.icon", is("icon")))
-//                .andExpect(jsonPath("$.color", is("color")))
-//                .andExpect(jsonPath("$.creditLimit", is(1000.00)))
-//                .andExpect(jsonPath("$.startBalance", is(0.00)))
-//                .andExpect(jsonPath("$.userId", is(7)));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                 // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Account 1")))
+                .andExpect(jsonPath("$.icon", is("icon")))
+                .andExpect(jsonPath("$.color", is("color")))
+                .andExpect(jsonPath("$.creditLimit", is(1000.00)))
+                .andExpect(jsonPath("$.startBalance", is(0.00)))
+                .andExpect(jsonPath("$.startDate[0]", is(2021)))
+                .andExpect(jsonPath("$.startDate[1]", is(1)))
+                .andExpect(jsonPath("$.startDate[2]", is(1)))
+                .andExpect(jsonPath("$.userId", is(7)));
     }
 
     @Test
@@ -148,6 +174,7 @@ class AccountControllerTest {
         accountReturn.setColor("color post");
         accountReturn.setCreditLimit(new BigDecimal("1000.00"));
         accountReturn.setStartBalance(new BigDecimal("0.00"));
+        accountReturn.setStartDate(LocalDate.parse("2021-04-05"));
         accountReturn.setUserId(5L);
 
         when(userService.getUserId()).thenReturn(5L);
@@ -166,6 +193,9 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.color", is("color post")))
                 .andExpect(jsonPath("$.creditLimit", is(1000.00)))
                 .andExpect(jsonPath("$.startBalance", is(0.00)))
+                .andExpect(jsonPath("$.startDate[0]", is(2021)))
+                .andExpect(jsonPath("$.startDate[1]", is(4)))
+                .andExpect(jsonPath("$.startDate[2]", is(5)))
                 .andExpect(jsonPath("$.userId", is(5)));
     }
 
@@ -179,6 +209,7 @@ class AccountControllerTest {
         accountPatch.setColor("color patch");
         accountPatch.setCreditLimit(new BigDecimal("1000.00"));
         accountPatch.setStartBalance(new BigDecimal("0.00"));
+        accountPatch.setStartDate(LocalDate.parse("2021-04-05"));
         accountPatch.setUserId(2L);
 
         Account accountFoundById = new Account();
@@ -188,6 +219,7 @@ class AccountControllerTest {
         accountFoundById.setColor("color patch");
         accountFoundById.setCreditLimit(new BigDecimal("1000.00"));
         accountFoundById.setStartBalance(new BigDecimal("0.00"));
+        accountFoundById.setStartDate(LocalDate.parse("2021-04-05"));
         accountFoundById.setUserId(2L);
 
         Account accountReturn = new Account();
@@ -197,6 +229,7 @@ class AccountControllerTest {
         accountReturn.setColor("color patch");
         accountReturn.setCreditLimit(new BigDecimal("1000.00"));
         accountReturn.setStartBalance(new BigDecimal("0.00"));
+        accountReturn.setStartDate(LocalDate.parse("2021-04-05"));
         accountReturn.setUserId(2L);
 
         when(service.findById(1L, new SimpleDateFormat("yyyy-MM-dd").format(new Date()))).thenReturn(Optional.of(accountFoundById));
@@ -208,16 +241,19 @@ class AccountControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(accountPatch)))
                 // Validate the response code and content type
-                .andExpect(status().isOk());
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                // Validate the returned fields
-//                .andExpect(jsonPath("$.id", is(1)))
-//                .andExpect(jsonPath("$.name", is("Account Patch")))
-//                .andExpect(jsonPath("$.icon", is("icon patch")))
-//                .andExpect(jsonPath("$.color", is("color patch")))
-//                .andExpect(jsonPath("$.creditLimit", is(1000.00)))
-//                .andExpect(jsonPath("$.startBalance", is(0.00)))
-//                .andExpect(jsonPath("$.userId", is(2)));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+               // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Account Patch")))
+                .andExpect(jsonPath("$.icon", is("icon patch")))
+                .andExpect(jsonPath("$.color", is("color patch")))
+                .andExpect(jsonPath("$.creditLimit", is(1000.00)))
+                .andExpect(jsonPath("$.startBalance", is(0.00)))
+                .andExpect(jsonPath("$.startDate[0]", is(2021)))
+                .andExpect(jsonPath("$.startDate[1]", is(4)))
+                .andExpect(jsonPath("$.startDate[2]", is(5)))
+                .andExpect(jsonPath("$.userId", is(2)));
     }
 
     @Test
@@ -246,7 +282,12 @@ class AccountControllerTest {
 
     static String asJsonString(final Object obj) {
         try {
-            return new ObjectMapper().writeValueAsString(obj);
+            ObjectMapper mapper = JsonMapper.builder()
+                    .addModule(new ParameterNamesModule())
+                    .addModule(new Jdk8Module())
+                    .addModule(new JavaTimeModule())
+                    .build();
+            return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

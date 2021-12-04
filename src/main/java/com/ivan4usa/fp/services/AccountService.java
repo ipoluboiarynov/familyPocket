@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The service that is called from the corresponding controller and controls actions on the Account
+ */
 @Service
 public class AccountService {
 

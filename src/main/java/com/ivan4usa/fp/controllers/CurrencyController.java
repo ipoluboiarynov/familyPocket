@@ -12,13 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+
+/**
+ * The controller that receives requests for operations on Currency
+ */
+@Controller
+@EnableWebMvc
 @CrossOrigin
 @RestController
 @RequestMapping("/api/currency")
@@ -28,16 +36,25 @@ public class CurrencyController {
     private final CurrencyService service;
     private final UserService userService;
     private final RatesService ratesService;
-    private final CurrencyService currencyService;
 
+    /**
+     * Constructor for class
+     * @param service of CurrencyService
+     * @param userService of UserService
+     * @param ratesService of RatesService
+     */
     @Autowired
-    public CurrencyController(CurrencyService service, UserService userService, RatesService ratesService, CurrencyService currencyService) {
+    public CurrencyController(CurrencyService service, UserService userService, RatesService ratesService) {
         this.service = service;
         this.userService = userService;
         this.ratesService = ratesService;
-        this.currencyService = currencyService;
     }
 
+    /**
+     * Get all currencies by user id
+     * @param userId id of user
+     * @return response with found currencies for user
+     */
     @PostMapping("/all")
     public ResponseEntity<List<Currency>> findAll(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
@@ -48,6 +65,11 @@ public class CurrencyController {
         return ResponseEntity.ok(service.findAll(userId));
     }
 
+    /**
+     * Get currency by id
+     * @param id of currency
+     * @return response with found currency
+     */
     @PostMapping("/id")
     public ResponseEntity<Currency> findById(@RequestBody Long id) {
         Long userId = this.userService.getUserId();
@@ -65,6 +87,11 @@ public class CurrencyController {
         return ResponseEntity.ok(currency);
     }
 
+    /**
+     * Add new currency
+     * @param currency to be added
+     * @return response with added currency
+     */
     @PostMapping("/add")
     public ResponseEntity<Currency> add(@RequestBody Currency currency) {
         Long userId = this.userService.getUserId();
@@ -83,6 +110,11 @@ public class CurrencyController {
         return ResponseEntity.ok(service.add(currency));
     }
 
+    /**
+     * Update existing currency
+     * @param currency with existing id that should be updated
+     * @return response with updated currency
+     */
     @PatchMapping("/update")
     public ResponseEntity<Currency> update(@RequestBody Currency currency) {
         Long userId = this.userService.getUserId();
@@ -106,6 +138,11 @@ public class CurrencyController {
         return ResponseEntity.ok(service.update(currency));
     }
 
+    /**
+     * Delete currency by id
+     * @param id of currency
+     * @return response with 200 status
+     */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Account> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The service that is called from the corresponding controller and controls actions on the Template
+ */
 @Service
 public class TemplateService {
 

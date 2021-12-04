@@ -12,8 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +33,7 @@ class RecordServiceTest {
     private RecordRepository repository;
 
     @Test
-    void findAll() throws ParseException {
+    void findAll() {
         // Set up a mock repository
         Record record1 = new Record(1L, LocalDate.parse("2020-04-02"),
                 new BigDecimal("1000.00"), "comment", RecordType.INCOME, 1L, null,
@@ -57,7 +55,7 @@ class RecordServiceTest {
     }
 
     @Test
-    void findById() throws ParseException {
+    void findById() {
         // Set up a mock repository
         Record record = new Record(8L, LocalDate.parse("2021-07-04"),
                 new BigDecimal("2000.00"), "comment", RecordType.INCOME, 5L, null,
@@ -81,7 +79,7 @@ class RecordServiceTest {
     }
 
     @Test
-    void add() throws ParseException {
+    void add() {
         // Set up a mock repository
         Record newRecord = new Record(1L, LocalDate.parse("2021-02-02"),
                 new BigDecimal("100.00"), "comment", RecordType.INCOME, 5L, null,
@@ -91,7 +89,7 @@ class RecordServiceTest {
         Record returnedRecord = service.add(newRecord);
         // Assert the response
         Assertions.assertNotNull(returnedRecord, "The saved record should not be null");
-        Assertions.assertEquals(LocalDate.parse("2021-02-02"), returnedRecord.getRecordDate(), "The name should be different");
+        Assertions.assertEquals(LocalDate.parse("2021-02-02"), returnedRecord.getRecordDate(), "The date should be different");
         Assertions.assertEquals(RecordType.INCOME, returnedRecord.getRecordType(), "The record type should be different");
         Assertions.assertEquals("comment", returnedRecord.getComment(), "The comment should be different");
         Assertions.assertEquals(new BigDecimal("100.00"), returnedRecord.getAmount(), "The amount should be different");
@@ -101,7 +99,7 @@ class RecordServiceTest {
     }
 
     @Test
-    void update() throws ParseException {
+    void update() {
         // Set up a mock repository
         Record updateRecord = new Record(7L, LocalDate.parse("2021-01-01"),
                 new BigDecimal("100.00"), "comment", RecordType.TR_IN, 2L, null,
@@ -121,7 +119,7 @@ class RecordServiceTest {
     }
 
     @Test
-    void delete() throws ParseException {
+    void delete() {
         // Set up a mock repository
         Record deleteRecord = new Record(4L, LocalDate.parse("2021-06-08"),
                 new BigDecimal("100.00"), "comment", RecordType.TR_IN, 2L, null,

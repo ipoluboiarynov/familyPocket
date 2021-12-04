@@ -9,12 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * The controller that receives requests for operations on Filter
+ */
+@Controller
+@EnableWebMvc
 @CrossOrigin
 @RestController
 @RequestMapping("/api/filter")
@@ -24,12 +31,22 @@ public class FilterController {
     private final FilterService service;
     private final UserService userService;
 
+    /**
+     * Constructor for class
+     * @param service of FilterService
+     * @param userService of UserService
+     */
     @Autowired
     public FilterController(FilterService service, UserService userService) {
         this.service = service;
         this.userService = userService;
     }
 
+    /**
+     * Get all filters by user id
+     * @param userId id of user
+     * @return response with found filters for user
+     */
     @PostMapping("/all")
     public ResponseEntity<List<Filter>> findAll(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
@@ -40,6 +57,11 @@ public class FilterController {
         return ResponseEntity.ok(service.findAll(userId));
     }
 
+    /**
+     * Get filter by id
+     * @param id of filter
+     * @return response with found filter
+     */
     @PostMapping("/id")
     public ResponseEntity<Filter> findById(@RequestBody Long id) {
         Long userId = this.userService.getUserId();
@@ -57,6 +79,11 @@ public class FilterController {
         return ResponseEntity.ok(filter);
     }
 
+    /**
+     * Add new filter
+     * @param filter to be added
+     * @return response with added filter
+     */
     @PostMapping("/add")
     public ResponseEntity<Filter> add(@RequestBody Filter filter) {
         Long userId = this.userService.getUserId();
@@ -75,6 +102,11 @@ public class FilterController {
         return ResponseEntity.ok(service.add(filter));
     }
 
+    /**
+     * Update filter with existing id
+     * @param filter with existing id and with data that should be updated
+     * @return response with updated filter
+     */
     @PatchMapping("/update")
     public ResponseEntity<Filter> update(@RequestBody Filter filter) {
         Long userId = this.userService.getUserId();
@@ -98,6 +130,11 @@ public class FilterController {
         return ResponseEntity.ok(service.update(filter));
     }
 
+    /**
+     * Delete filter by id
+     * @param id of filter
+     * @return response with 200 status
+     */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Filter> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {

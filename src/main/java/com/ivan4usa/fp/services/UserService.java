@@ -19,6 +19,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * The service that is called from the corresponding controller and controls actions on the User
+ */
 @Service
 public class UserService {
 

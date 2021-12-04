@@ -36,3 +36,4 @@
 | 11/27/21 | Work on the front-end: fixed date converting (changed Date to LocalDate on backend) | 4 |
 | 11/28/21 | Work on the front-end: trouble shootings | 3 |
 | 11/29/21 | Work on the front-end + backend: added transfer between accounts (all functionality) | 8 |
+| 12/03/21 | Fixed and added tests, added description for classes and methods | 5 |

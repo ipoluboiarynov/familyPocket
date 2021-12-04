@@ -1,12 +1,11 @@
 package com.ivan4usa.fp.search;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class PageParams {
     private Integer pageSize;
     private Integer pageNumber;

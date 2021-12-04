@@ -17,11 +17,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * The controller that receives requests for operations on Record
+ */
+@Controller
+@EnableWebMvc
 @CrossOrigin
 @RestController
 @RequestMapping("/api/record")
@@ -31,12 +38,22 @@ public class RecordController {
     private final RecordService service;
     private final UserService userService;
 
+    /**
+     * Constructor for class
+     * @param service of RecordService
+     * @param userService of UserService
+     */
     @Autowired
     public RecordController(RecordService service, UserService userService) {
         this.service = service;
         this.userService = userService;
     }
 
+    /**
+     * Get all records by user id
+     * @param userId id of user
+     * @return response with list of all records for user
+     */
     @PostMapping("/all")
     public ResponseEntity<List<Record>> findAll(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
@@ -47,6 +64,11 @@ public class RecordController {
         return ResponseEntity.ok(service.findAll(userId));
     }
 
+    /**
+     * Get total number of records by user id
+     * @param userId id of user
+     * @return response with total number of records
+     */
     @PostMapping("/total")
     public ResponseEntity<Integer> getTotalNumber(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
@@ -57,6 +79,11 @@ public class RecordController {
         return ResponseEntity.ok(service.getTotalNumber(userId));
     }
 
+    /**
+     * Get all records that matches to search criteria
+     * @param searchValues search values with filter and pagination parameters
+     * @return response with found records
+     */
     @PostMapping("/search")
     public ResponseEntity<Page<Record>> search(@RequestBody RecordSearchValues searchValues) {
         Long userId = this.userService.getUserId();
@@ -88,6 +115,11 @@ public class RecordController {
         return ResponseEntity.ok(service.search(recordType, startDate, endDate, userId, account_ids, category_ids, pageRequest));
     }
 
+    /**
+     * Get record by id
+     * @param id of record
+     * @return response with found record or with appropriate error
+     */
     @PostMapping("/id")
     public ResponseEntity<Record> findById(@RequestBody Long id) {
         Long userId = this.userService.getUserId();
@@ -105,6 +137,11 @@ public class RecordController {
         return ResponseEntity.ok(record);
     }
 
+    /**
+     * Add new record
+     * @param record to be added
+     * @return response with added record
+     */
     @PostMapping("/add")
     public ResponseEntity<Record> add(@RequestBody Record record) {
         Long userId = this.userService.getUserId();
@@ -125,6 +162,11 @@ public class RecordController {
         return ResponseEntity.ok(service.add(record));
     }
 
+    /**
+     * Add record as a transfer between accounts (without category and with id of related record in thr comment)
+     * @param records two related records about transfer from one account to another account
+     * @return response with updated record
+     */
     @PostMapping("/transfer/add")
     public ResponseEntity<Record[]> addTransfer(@RequestBody ArrayList<Record> records) {
         Long userId = this.userService.getUserId();
@@ -164,6 +206,11 @@ public class RecordController {
         return ResponseEntity.ok(service.addTransfer(recordFromAccount, recordToAccount));
     }
 
+    /**
+     * Update existing record
+     * @param record that is going to be updated
+     * @return response with updated record
+     */
     @PatchMapping("/update")
     public ResponseEntity<Record> update(@RequestBody Record record) {
         Long userId = this.userService.getUserId();
@@ -189,6 +236,11 @@ public class RecordController {
         return ResponseEntity.ok(service.update(record));
     }
 
+    /**
+     * Delete record by id
+     * @param id of record
+     * @return response with 200 status
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Record> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {

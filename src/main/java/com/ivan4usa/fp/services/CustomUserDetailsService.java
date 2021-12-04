@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * The service that is called from the corresponding controller and controls actions on the CustomUserDetails
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

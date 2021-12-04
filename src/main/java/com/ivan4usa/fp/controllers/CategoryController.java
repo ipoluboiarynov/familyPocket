@@ -9,12 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * The controller that receives requests for category on Category
+ */
+@Controller
+@EnableWebMvc
 @CrossOrigin
 @RestController
 @RequestMapping("/api/category")
@@ -23,12 +30,22 @@ public class CategoryController {
     private final CategoryService service;
     private final UserService userService;
 
+    /**
+     * Constructor for class
+     * @param service of CategoryService
+     * @param userService of UserService
+     */
     @Autowired
     public CategoryController(CategoryService service, UserService userService) {
         this.service = service;
         this.userService = userService;
     }
 
+    /**
+     * Get all categories by user id
+     * @param userId id of user
+     * @return response with list of categories for user
+     */
     @PostMapping("/all")
     public ResponseEntity<List<Category>> findAll(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
@@ -39,6 +56,11 @@ public class CategoryController {
         return ResponseEntity.ok(service.findAll(userId));
     }
 
+    /**
+     * Get category by id
+     * @param id of Category
+     * @return response with category
+     */
     @PostMapping("/id")
     public ResponseEntity<Category> findById(@RequestBody Long id) {
         Long userId = this.userService.getUserId();
@@ -56,6 +78,11 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
+    /**
+     * Add new category
+     * @param category to be added
+     * @return response with added category
+     */
     @PostMapping("/add")
     public ResponseEntity<Category> add(@RequestBody Category category) {
         Long userId = this.userService.getUserId();
@@ -75,6 +102,11 @@ public class CategoryController {
         return ResponseEntity.ok(service.add(category));
     }
 
+    /**
+     * Update existing category
+     * @param category with existing id but new data
+     * @return response with updated category
+     */
     @PatchMapping("/update")
     public ResponseEntity<Category> update(@RequestBody Category category) {
         Long userId = this.userService.getUserId();
@@ -97,6 +129,11 @@ public class CategoryController {
         return ResponseEntity.ok(service.update(category));
     }
 
+    /**
+     * Delete existing category by id
+     * @param id of category
+     * @return response with 200 status
+     */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Category> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {

@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The service that is called from the corresponding controller and controls actions on the Record
+ */
 @Service
 public class RecordService {
     private final Logger logger = LogManager.getLogger(this.getClass());

@@ -9,5 +9,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class JsonException {
     private String exception;
-//    private String message;
 }

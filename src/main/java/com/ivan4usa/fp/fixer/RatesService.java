@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Service for loading data on the exchange rate
+ */
 @Service
 public class RatesService {
 
@@ -29,6 +32,13 @@ public class RatesService {
     @Value("${rapid.key}")
     private String rapidKey;
 
+    /**
+     * A method that calls an external api service (FIxer.io) to load data on the exchange rate
+     * for the date specified in the received parameter
+     * @param date date of String type ("yyyy-mm-dd")
+     * @return rates of currencies
+     * @throws IOException any exception
+     */
     public Rates loadRatesByDateFixer(String date) throws IOException {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -49,6 +59,13 @@ public class RatesService {
         return rates;
     }
 
+    /**
+     * A method that calls an external api service (Rapid Api) to load data on the exchange rate
+     * for the date specified in the received parameter
+     * @param date date of String type ("yyyy-mm-dd")
+     * @return rates of currencies
+     * @throws IOException any exception
+     */
     public Rates loadRatesByDateRapid(String date) throws IOException {
         OkHttpClient client = new OkHttpClient();
 

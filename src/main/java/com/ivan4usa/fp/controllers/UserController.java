@@ -7,11 +7,18 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * The controller that receives requests for operations on User
+ */
+@Controller
+@EnableWebMvc
 @CrossOrigin
 @RestController
 @RequestMapping("/api/user")
@@ -19,11 +26,20 @@ public class UserController {
     private final Logger logger = LogManager.getLogger(this.getClass());
     private final UserService service;
 
+    /**
+     * Constructor for class
+     * @param service of UserService
+     */
     @Autowired
     public UserController(UserService service) {
         this.service = service;
     }
 
+    /**
+     * Get user by id
+     * @param id of user
+     * @return response with found user or with error message
+     */
     @PostMapping("/id")
     public ResponseEntity<User> findById(@RequestBody Long id) {
         Long userId = this.service.getUserId();
@@ -41,6 +57,11 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    /**
+     * Update existing user data
+     * @param user to be updated
+     * @return response with updated user
+     */
     @PostMapping("/update")
     public ResponseEntity<Integer> findById(@RequestBody User user) {
         Long userId = this.service.getUserId();

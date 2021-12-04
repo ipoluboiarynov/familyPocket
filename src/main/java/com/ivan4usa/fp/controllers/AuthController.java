@@ -18,10 +18,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.validation.Valid;
 
+/**
+ * The controller that receives requests for operations with authentication
+ */
+@Controller
+@EnableWebMvc
 @CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
@@ -33,6 +40,12 @@ public class AuthController {
     @Value("${jwt.auth.token_prefix}")
     private String TOKEN_PREFIX;
 
+    /**
+     * Constructor for class
+     * @param jwtTokenProvider of JWTTokenProvider
+     * @param userService of UserService
+     * @param authenticationManager of AuthenticationManager
+     */
     @Autowired
     public AuthController(JWTTokenProvider jwtTokenProvider, UserService userService,
                           AuthenticationManager authenticationManager) {
@@ -41,6 +54,12 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * The method that receives the data with credentials, checks it and responses with generated jwt and with user id
+     * @param request with credentials (email address and password)
+     * @return response with jwt and user id
+     * @throws JsonProcessingException exception processing the json conversion
+     */
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) throws JsonProcessingException {
 
@@ -69,6 +88,11 @@ public class AuthController {
     }
 
 
+    /**
+     * The method that receives new credentials, checks it for unique and returns response with new userr
+     * @param request credentials (email address and password)
+     * @return response with new user
+     */
     @PostMapping("/register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
         if (userService.userExistsByEmail(request.getEmail())) {
@@ -88,6 +112,11 @@ public class AuthController {
         return ResponseEntity.ok(userService.createUser(request));
     }
 
+    /**
+     * The method that updates password for user by user id
+     * @param password new password
+     * @return response with updated rows
+     */
     @PostMapping("/update-password")
     public ResponseEntity<Boolean> updatePassword(@RequestBody String password) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -96,6 +125,11 @@ public class AuthController {
         return ResponseEntity.ok(updatedRows == 1);
     }
 
+    /**
+     * Method that catches and handles bad requests
+     * @param e exception
+     * @return response with simple name of exception and status of bad request
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<JsonException> handleExceptions(Exception e) {
         return new ResponseEntity<>(new JsonException(e.getClass().getSimpleName()), HttpStatus.BAD_REQUEST);
