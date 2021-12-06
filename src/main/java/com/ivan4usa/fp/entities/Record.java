@@ -1,16 +1,13 @@
 package com.ivan4usa.fp.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivan4usa.fp.enums.RecordType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.Hibernate;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Entity
 @Table(name = "record", schema = "fp_db")
@@ -18,12 +15,15 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Record {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "record_date", nullable = false)
     private LocalDate recordDate;
 
@@ -42,22 +42,9 @@ public class Record {
 
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
-    public Account account;
+    private Account account;
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = true)
-    public Category category;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Record record = (Record) o;
-        return Objects.equals(id, record.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
-    }
+    private Category category;
 }

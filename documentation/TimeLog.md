@@ -37,3 +37,5 @@
 | 11/28/21 | Work on the front-end: trouble shootings | 3 |
 | 11/29/21 | Work on the front-end + backend: added transfer between accounts (all functionality) | 8 |
 | 12/03/21 | Fixed and added tests, added description for classes and methods | 5 |
+| 12/05/21 | Fixing bugs | 4 |
+| 12/06/21 | Working on QA Plugin recommendations and adding jDoc comments | 4 |

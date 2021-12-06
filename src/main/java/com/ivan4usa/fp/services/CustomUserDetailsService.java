@@ -14,13 +14,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    /**
+     * UserRepository Instance
+     */
     private final UserRepository userRepository;
 
+    /**
+     * Constructor for the class
+     * @param userRepository instance
+     */
     @Autowired
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Load user by email to the UserDetails object method
+     * @param email of user
+     * @return UserDetails object
+     */
     @Override
     public UserDetails loadUserByUsername(String email) {
         User user = userRepository.findUserByEmail(email)

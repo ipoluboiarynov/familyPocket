@@ -69,6 +69,7 @@ class AccountServiceTest {
 
         // Assert the response
         Assertions.assertEquals(3, accounts.size(), "findAll should return 3 accounts");
+
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.ivan4usa.fp.controllers;
 
+import com.ivan4usa.fp.constants.MessageTemplates;
 import com.ivan4usa.fp.entities.User;
 import com.ivan4usa.fp.services.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -41,18 +42,18 @@ public class UserController {
      * @return response with found user or with error message
      */
     @PostMapping("/id")
-    public ResponseEntity<User> findById(@RequestBody Long id) {
+    public ResponseEntity<?> findById(@RequestBody Long id) {
         Long userId = this.service.getUserId();
-        User user = null;
+        User user;
         try {
             user = service.getUserById(id).get();
         } catch (NoSuchElementException e) {
-            logger.error("User with id = " + id + " not found");
-            return new ResponseEntity("User not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notFoundMessage(User.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(User.class, id), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(id, userId)) {
-            logger.error("User is not match to user id of " + id);
-            return new ResponseEntity("User is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(User.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(User.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(user);
     }
@@ -63,23 +64,24 @@ public class UserController {
      * @return response with updated user
      */
     @PostMapping("/update")
-    public ResponseEntity<Integer> findById(@RequestBody User user) {
+    public ResponseEntity<?> findById(@RequestBody User user) {
         Long userId = this.service.getUserId();
         Long id = user.getId();
-        if (id == null && id == 0) {
-            logger.error("User id is null");
-            return new ResponseEntity("User id is null", HttpStatus.NOT_ACCEPTABLE);
+        if (id == null || id == 0) {
+            logger.error(MessageTemplates.idIsNull(User.class));
+            return new ResponseEntity<>(MessageTemplates.idIsNull(User.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (user.getEmail() == null ) {
-            logger.error("Some fields of user are empty");
-            return new ResponseEntity("Some fields of user are empty", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emptyFields(User.class));
+            return new ResponseEntity<>(MessageTemplates.emptyFields(User.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(id, userId)) {
-            return new ResponseEntity("User is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(User.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(User.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!service.getUserById(id).isPresent()) {
-            logger.error("User id" + id + " is not found");
-            return new ResponseEntity("User id " + id + " is not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notFoundMessage(User.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(User.class, id), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.updateUser(user));
     }

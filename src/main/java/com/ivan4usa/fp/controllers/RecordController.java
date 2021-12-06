@@ -1,8 +1,8 @@
 package com.ivan4usa.fp.controllers;
 
+import com.ivan4usa.fp.constants.MessageTemplates;
 import com.ivan4usa.fp.entities.Account;
 import com.ivan4usa.fp.entities.Category;
-import com.ivan4usa.fp.entities.Filter;
 import com.ivan4usa.fp.entities.Record;
 import com.ivan4usa.fp.enums.RecordType;
 import com.ivan4usa.fp.search.RecordSearchValues;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,7 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * The controller that receives requests for operations on Record
@@ -55,11 +57,11 @@ public class RecordController {
      * @return response with list of all records for user
      */
     @PostMapping("/all")
-    public ResponseEntity<List<Record>> findAll(@RequestBody Long userId) {
+    public ResponseEntity<?> findAll(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
         if (!Objects.equals(checkUserId, userId)) {
-            logger.error("Record is not match to user id of " + userId);
-            return new ResponseEntity("Record is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Record.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Record.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.findAll(userId));
     }
@@ -70,11 +72,11 @@ public class RecordController {
      * @return response with total number of records
      */
     @PostMapping("/total")
-    public ResponseEntity<Integer> getTotalNumber(@RequestBody Long userId) {
+    public ResponseEntity<?> getTotalNumber(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
         if (!Objects.equals(checkUserId, userId)) {
-            logger.error("Record is not match to user id of " + userId);
-            return new ResponseEntity("Record is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Record.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Record.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.getTotalNumber(userId));
     }
@@ -90,21 +92,21 @@ public class RecordController {
         RecordType recordType = searchValues.getFilter().getRecordType() != null ? searchValues.getFilter().getRecordType() : null;
         LocalDate startDate = searchValues.getFilter().getStartDate() != null ? searchValues.getFilter().getStartDate() : null;
         LocalDate endDate = searchValues.getFilter().getEndDate() != null ? searchValues.getFilter().getEndDate() : null;
-        List<Long> account_ids = new ArrayList<>();
+        List<Long> accountIds = new ArrayList<>();
         if (searchValues.getFilter().getAccounts().size() > 0) {
             for (Account account: searchValues.getFilter().getAccounts()) {
-                account_ids.add(account.getId());
+                accountIds.add(account.getId());
             }
         } else {
-            account_ids = null;
+            accountIds = null;
         }
-        List<Long> category_ids = new ArrayList<>();
+        List<Long> categoryIds = new ArrayList<>();
         if (searchValues.getFilter().getCategories().size() > 0) {
             for (Category category: searchValues.getFilter().getCategories()) {
-                category_ids.add(category.getId());
+                categoryIds.add(category.getId());
             }
         } else {
-            category_ids = null;
+            categoryIds = null;
         }
         int pageSize = searchValues.getPageParams().getPageSize() != null ? searchValues.getPageParams().getPageSize()
                 : 100;
@@ -112,7 +114,7 @@ public class RecordController {
                 : 0;
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-        return ResponseEntity.ok(service.search(recordType, startDate, endDate, userId, account_ids, category_ids, pageRequest));
+        return ResponseEntity.ok(service.search(recordType, startDate, endDate, userId, accountIds, categoryIds, pageRequest));
     }
 
     /**
@@ -121,18 +123,18 @@ public class RecordController {
      * @return response with found record or with appropriate error
      */
     @PostMapping("/id")
-    public ResponseEntity<Record> findById(@RequestBody Long id) {
+    public ResponseEntity<?> findById(@RequestBody Long id) {
         Long userId = this.userService.getUserId();
-        Record record = null;
+        Record record;
         try {
             record = service.findById(id).get();
         } catch (NoSuchElementException e) {
-            logger.error("Record with id = " + id + " not found");
-            return new ResponseEntity("Record not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notFoundMessage(Record.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(Record.class, id), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(record.getUserId(), userId)) {
-            logger.error("Record is not match to user id of " + id);
-            return new ResponseEntity("Record is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Record.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Record.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(record);
     }
@@ -143,21 +145,22 @@ public class RecordController {
      * @return response with added record
      */
     @PostMapping("/add")
-    public ResponseEntity<Record> add(@RequestBody Record record) {
+    public ResponseEntity<?> add(@RequestBody Record record) {
         Long userId = this.userService.getUserId();
         if (record.getId() != null && record.getId() != 0) {
-            logger.error("Record id must be null");
-            return new ResponseEntity("Record id must be null", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.idMustBeNull(Record.class));
+            return new ResponseEntity<>(MessageTemplates.idMustBeNull(Record.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (record.getRecordDate() == null ||
                 record.getAmount() == null ||
                 record.getRecordType() == null ||
                 record.getUserId() == null) {
-            logger.error("Some fields of record are empty");
-            return new ResponseEntity("Some fields of record are empty", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emptyFields(Record.class));
+            return new ResponseEntity<>(MessageTemplates.emptyFields(Record.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(record.getUserId(), userId)) {
-            return new ResponseEntity("Record is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Record.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Record.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.add(record));
     }
@@ -168,39 +171,41 @@ public class RecordController {
      * @return response with updated record
      */
     @PostMapping("/transfer/add")
-    public ResponseEntity<Record[]> addTransfer(@RequestBody ArrayList<Record> records) {
+    public ResponseEntity<?> addTransfer(@RequestBody List<Record> records) {
         Long userId = this.userService.getUserId();
         Record recordFromAccount = records.get(0);
         Record recordToAccount = records.get(1);
 
         if (recordFromAccount.getId() != null && recordFromAccount.getId() != 0 &&
                 recordToAccount.getId() != null && recordToAccount.getId() != 0) {
-            logger.error("Record id must be null");
-            return new ResponseEntity("Record id must be null", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.idMustBeNull(Record.class));
+            return new ResponseEntity<>(MessageTemplates.idMustBeNull(Record.class), HttpStatus.NOT_ACCEPTABLE);
         }
 
         if (recordFromAccount.getRecordDate() == null ||
                 recordFromAccount.getAmount() == null ||
                 recordFromAccount.getRecordType() == null ||
                 recordFromAccount.getUserId() == null) {
-            logger.error("Some fields of record from account are empty");
-            return new ResponseEntity("Some fields of record from accountare empty", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emptyFields(Record.class));
+            return new ResponseEntity<>(MessageTemplates.emptyFields(Record.class), HttpStatus.NOT_ACCEPTABLE);
         }
 
         if (recordToAccount.getRecordDate() == null ||
                 recordToAccount.getAmount() == null ||
                 recordToAccount.getRecordType() == null ||
                 recordToAccount.getUserId() == null) {
-            logger.error("Some fields of record to account are empty");
-            return new ResponseEntity("Some fields of record to account are empty", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emptyFields(Record.class));
+            return new ResponseEntity<>(MessageTemplates.emptyFields(Record.class), HttpStatus.NOT_ACCEPTABLE);
         }
 
         if (!Objects.equals(recordFromAccount.getUserId(), userId)) {
-            return new ResponseEntity("Record from account is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Record.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Record.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
 
         if (!Objects.equals(recordToAccount.getUserId(), userId)) {
-            return new ResponseEntity("Record to account is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Record.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Record.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
 
         return ResponseEntity.ok(service.addTransfer(recordFromAccount, recordToAccount));
@@ -212,26 +217,27 @@ public class RecordController {
      * @return response with updated record
      */
     @PatchMapping("/update")
-    public ResponseEntity<Record> update(@RequestBody Record record) {
+    public ResponseEntity<?> update(@RequestBody Record record) {
         Long userId = this.userService.getUserId();
         Long id = record.getId();
-        if (record.getId() == null && record.getId() == 0) {
-            logger.error("Record id is null");
-            return new ResponseEntity("Record id is null", HttpStatus.NOT_ACCEPTABLE);
+        if (record.getId() == null || record.getId() == 0) {
+            logger.error(MessageTemplates.idIsNull(Record.class));
+            return new ResponseEntity<>(MessageTemplates.idIsNull(Record.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (record.getRecordDate() == null ||
                 record.getAmount() == null ||
                 record.getRecordType() == null ||
                 record.getUserId() == null) {
-            logger.error("Some fields of record are empty");
-            return new ResponseEntity("Some fields of record are empty", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emptyFields(Record.class));
+            return new ResponseEntity<>(MessageTemplates.emptyFields(Record.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(record.getUserId(), userId)) {
-            return new ResponseEntity("Record is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Record.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Record.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!service.findById(id).isPresent()) {
-            logger.error("Record id" + id + " is not found");
-            return new ResponseEntity("Record id " + id + " is not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notFoundMessage(Record.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(Record.class, id), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.update(record));
     }
@@ -242,16 +248,17 @@ public class RecordController {
      * @return response with 200 status
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Record> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
-            return new ResponseEntity("id missed", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.missedIdMessage(Record.class));
+            return new ResponseEntity<>(MessageTemplates.missedIdMessage(Record.class), HttpStatus.NOT_ACCEPTABLE);
         }
         try {
             service.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.error("Record id "+ id + " not found");
-            return new ResponseEntity("Record id " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notFoundMessage(Record.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(Record.class, id), HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

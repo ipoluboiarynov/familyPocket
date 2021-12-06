@@ -101,9 +101,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$[0].color", is("color")))
                 .andExpect(jsonPath("$[0].creditLimit", is(1000.00)))
                 .andExpect(jsonPath("$[0].startBalance", is(0.00)))
-                .andExpect(jsonPath("$[0].startDate[0]", is(2021)))
-                .andExpect(jsonPath("$[0].startDate[1]", is(1)))
-                .andExpect(jsonPath("$[0].startDate[2]", is(1)))
+                .andExpect(jsonPath("$[0].startDate", is("2021-01-01")))
                 .andExpect(jsonPath("$[0].userId", is(5)))
                 .andExpect(jsonPath("$[1].id", is(2)))
                 .andExpect(jsonPath("$[1].name", is("Account 2")))
@@ -111,9 +109,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$[1].color", is("color2")))
                 .andExpect(jsonPath("$[1].creditLimit", is(2000.00)))
                 .andExpect(jsonPath("$[1].startBalance", is(10.00)))
-                .andExpect(jsonPath("$[1].startDate[0]", is(2021)))
-                .andExpect(jsonPath("$[1].startDate[1]", is(1)))
-                .andExpect(jsonPath("$[1].startDate[2]", is(1)))
+                .andExpect(jsonPath("$[1].startDate", is("2021-01-01")))
                 .andExpect(jsonPath("$[1].userId", is(5)));
     }
 
@@ -149,9 +145,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.color", is("color")))
                 .andExpect(jsonPath("$.creditLimit", is(1000.00)))
                 .andExpect(jsonPath("$.startBalance", is(0.00)))
-                .andExpect(jsonPath("$.startDate[0]", is(2021)))
-                .andExpect(jsonPath("$.startDate[1]", is(1)))
-                .andExpect(jsonPath("$.startDate[2]", is(1)))
+                .andExpect(jsonPath("$.startDate", is("2021-01-01")))
                 .andExpect(jsonPath("$.userId", is(7)));
     }
 
@@ -193,9 +187,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.color", is("color post")))
                 .andExpect(jsonPath("$.creditLimit", is(1000.00)))
                 .andExpect(jsonPath("$.startBalance", is(0.00)))
-                .andExpect(jsonPath("$.startDate[0]", is(2021)))
-                .andExpect(jsonPath("$.startDate[1]", is(4)))
-                .andExpect(jsonPath("$.startDate[2]", is(5)))
+                .andExpect(jsonPath("$.startDate", is("2021-04-05")))
                 .andExpect(jsonPath("$.userId", is(5)));
     }
 
@@ -250,9 +242,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.color", is("color patch")))
                 .andExpect(jsonPath("$.creditLimit", is(1000.00)))
                 .andExpect(jsonPath("$.startBalance", is(0.00)))
-                .andExpect(jsonPath("$.startDate[0]", is(2021)))
-                .andExpect(jsonPath("$.startDate[1]", is(4)))
-                .andExpect(jsonPath("$.startDate[2]", is(5)))
+                .andExpect(jsonPath("$.startDate", is("2021-04-05")))
                 .andExpect(jsonPath("$.userId", is(2)));
     }
 

@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -21,16 +20,16 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "(:recordType is null or r.recordType=:recordType) and " +
             "(cast(:startDate as timestamp) is null or r.recordDate>=:startDate) and " +
             "(cast(:endDate as timestamp) is null or r.recordDate<=:endDate) and " +
-            "((:account_ids) is null or r.account.id in (:account_ids)) and " +
-            "((:category_ids) is null or r.category.id in (:category_ids)) " +
+            "((:accountIds) is null or r.account.id in (:accountIds)) and " +
+            "((:categoryIds) is null or r.category.id in (:categoryIds)) " +
             "order by r.recordDate desc, r.id desc"
     )
     Page<Record> search(@Param("recordType") RecordType recordType,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate,
                         @Param("userId") Long userId,
-                        @Param("account_ids") List<Long> account_ids,
-                        @Param("category_ids") List<Long> category_ids,
+                        @Param("accountIds") List<Long> accountIds,
+                        @Param("categoryIds") List<Long> categoryIds,
                         Pageable pageable
     );
 

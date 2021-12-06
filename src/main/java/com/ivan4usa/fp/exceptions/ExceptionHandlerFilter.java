@@ -18,6 +18,14 @@ import java.io.IOException;
 @Component
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
+    /**
+     * Filter for catching json exceptions
+     * @param httpServletRequest request
+     * @param httpServletResponse response
+     * @param filterChain object
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {

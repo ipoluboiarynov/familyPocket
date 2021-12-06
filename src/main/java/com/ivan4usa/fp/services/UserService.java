@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,11 +26,32 @@ import java.util.Set;
 @Service
 public class UserService {
 
+    /**
+     * Instance of log Manager
+     */
     private final Logger logger = LogManager.getLogger(this.getClass());
+
+    /**
+     * Instance of UserRepository
+     */
     private final UserRepository userRepository;
+
+    /**
+     * Instance of RoleRepository
+     */
     private final RoleRepository roleRepository;
+
+    /**
+     * Instance of BCryptPasswordEncoder
+     */
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    /**
+     * Constructor for the class
+     * @param userRepository user repository
+     * @param roleRepository role repository
+     * @param bCryptPasswordEncoder bCryptPassword encoder
+     */
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
@@ -37,6 +59,11 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    /**
+     * Create new user method
+     * @param request with user info
+     * @return new user
+     */
     @Transactional
     public User createUser(RegisterRequest request) {
         // Check if user exists
@@ -47,7 +74,7 @@ public class UserService {
             User user = new User();
             user.setEmail(request.getEmail());
             user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-            Role role = new Role();
+            Role role;
             if (roleRepository.findRoleByName("USER").isPresent()) {
                 role = roleRepository.findRoleByName("USER").get();
             } else {
@@ -65,18 +92,36 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Method that checks if user exists by email
+     * @param email of checking user
+     * @return true or false
+     */
     public boolean userExistsByEmail(String email) {
         return this.userRepository.findUserByEmail(email).isPresent();
     }
 
+    /**
+     * Get user by id method
+     * @param id of user
+     * @return Optional object with found user or empty
+     */
     public Optional<User> getUserById(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails customUser = (CustomUserDetails) authentication.getPrincipal();
-        if (customUser.getId() == id) {
+        if (Objects.equals(customUser.getId(), id)) {
             return Optional.ofNullable(customUser.getUser());
-        } else return Optional.empty();
+        } else {
+            return Optional.empty();
+        }
     }
 
+    /**
+     * Update user password method
+     * @param password new password
+     * @param email current email of user
+     * @return number of updated rows
+     */
     public int updateUserPassword(String password, String email) {
         return userRepository.updateUserPassword(bCryptPasswordEncoder.encode(password), email);
     }
@@ -93,7 +138,6 @@ public class UserService {
 
     /**
      * Method updates users data - name or/and email by id
-     *
      * @param user with updated data
      * @return 1 if success or 0 if failure
      */

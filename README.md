@@ -15,20 +15,19 @@ other, and our application will provide order in your money matters.
 | Name  | Technology    |
 |-----------|-----------|
 | Security/Authentication | Spring Security & JSON Web Token |
-| Database | MySQL 8.0.26 |
+| Database | Postgres 14.1.1 |
 | ORM Framework | Hibernate 5.5.6 |
 | Dependency Management | Maven |
-| Web Services consumed using Java | here |
+| Web Services consumed using Java | Fixer.io |
 | CSS | Bootstrap 4 and Argon Template (creative-tim.com)|
 | Data Validation | Bootstrap Validator (frontend) &  Hibernate's validation (backend) |
 | Logging | Log4J2 |
-| Hosting | Heroku (backend) & Web Hosting (frontend) |
-| Independent Research Topic's | here |
-| Unit Testing | JUnit 5 tests to achieve 80%+ code coverage |
+| Hosting | Heroku |
+| Independent Research Topic's | Spring Boot, Spring Security, Angular, Mockito Unit Tests, Jackson extensions, Json Web Token, Lombok, Postgres |
+| Unit Testing | JUnit 5 with Mockito |
 | IDE | IntelliJ IDEA |
 | VCS | Git |
 | Frontend Framework | Angular 12 (typescript) |
-| REST API Service | fixer.io (free plan with 250 calls/mo) |
 
 ### Design
 

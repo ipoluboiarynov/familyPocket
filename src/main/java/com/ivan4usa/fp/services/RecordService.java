@@ -20,31 +20,75 @@ import java.util.Optional;
  */
 @Service
 public class RecordService {
-    private final Logger logger = LogManager.getLogger(this.getClass());
-    private RecordRepository repository;
 
+    /**
+     * Instance of log Manager
+     */
+    private final Logger logger = LogManager.getLogger(this.getClass());
+
+    /**
+     * Repository instance
+     */
+    private final RecordRepository repository;
+
+    /**
+     * Constructor for the class
+     * @param repository instance
+     */
     @Autowired
     public RecordService(RecordRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Find all record by user id method
+     * @param userId user id
+     * @return all found records by user id
+     */
     public List<Record> findAll(Long userId) {
         return repository.findRecordsByUserIdOrderByRecordDateDesc(userId);
     }
 
-    public Page<Record> search(RecordType recordType, LocalDate startDate, LocalDate endDate, Long userId, List<Long> account_ids,
-                               List<Long> category_ids, PageRequest pageRequest) {
-        return repository.search(recordType, startDate, endDate, userId, account_ids, category_ids, pageRequest);
+    /**
+     * Search records by parameters method that returns page of found records
+     * @param recordType record type search parameter
+     * @param startDate start date search parameter
+     * @param endDate end date search parameter
+     * @param userId user id search parameter
+     * @param accountIds list of account ids search parameter
+     * @param categoryIds list of category ids search parameter
+     * @param pageRequest page settings parameter
+     * @return page with found records
+     */
+    public Page<Record> search(RecordType recordType, LocalDate startDate, LocalDate endDate, Long userId, List<Long> accountIds,
+                               List<Long> categoryIds, PageRequest pageRequest) {
+        return repository.search(recordType, startDate, endDate, userId, accountIds, categoryIds, pageRequest);
     }
 
+    /**
+     * Optional object with found record or empty
+     * @param id of record
+     * @return found record by id
+     */
     public Optional<Record> findById(Long id) {
         return repository.findById(id);
     }
 
+    /**
+     * Add new record method
+     * @param record to be added
+     * @return added record
+     */
     public Record add(Record record) {
         return repository.save(record);
     }
 
+    /**
+     * Transactional method that adds two records of transfer between accounts of user
+     * @param recordFromAccount record for account from which transaction moves
+     * @param recordToAccount record for account to which transaction moves
+     * @return array with added records
+     */
     @Transactional
     public Record[] addTransfer(Record recordFromAccount, Record recordToAccount) {
         Record recordFromOne = repository.save(recordFromAccount);
@@ -61,10 +105,21 @@ public class RecordService {
         return result;
     }
 
+    /**
+     * Update record method
+     * @param record with new data
+     * @return updated record
+     */
     public Record update(Record record) {
         return repository.save(record);
     }
 
+    /**
+     * Delete record by id method that also checks if the deleting record has a category, if it is not, than it's getting
+     * related record's id from comment field of current record (that should be there) and also deletes that related method
+     * since it is related record of the same transfer operation
+     * @param id of deleting record
+     */
     @Transactional
     public void delete(Long id) {
         Optional<Record> record = repository.findById(id);
@@ -84,6 +139,12 @@ public class RecordService {
             }
         }
     }
+
+    /**
+     * Method that gets total number of records by user id
+     * @param userId user id
+     * @return number of total records
+     */
     public Integer getTotalNumber(Long userId) {
         return repository.getTotalNumber(userId);
     }

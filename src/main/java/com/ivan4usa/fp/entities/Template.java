@@ -1,15 +1,10 @@
 package com.ivan4usa.fp.entities;
 
 import com.ivan4usa.fp.enums.RecordType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.Hibernate;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Entity
 @Table(name = "template", schema = "fp_db")
@@ -17,6 +12,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Template {
 
     @Id
@@ -43,17 +39,4 @@ public class Template {
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Template template = (Template) o;
-        return Objects.equals(id, template.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
-    }
 }

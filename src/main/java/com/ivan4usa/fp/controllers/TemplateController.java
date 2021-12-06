@@ -1,5 +1,6 @@
 package com.ivan4usa.fp.controllers;
 
+import com.ivan4usa.fp.constants.MessageTemplates;
 import com.ivan4usa.fp.entities.Template;
 import com.ivan4usa.fp.services.TemplateService;
 import com.ivan4usa.fp.services.UserService;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -48,11 +48,11 @@ public class TemplateController {
      * @return response with list of all templates
      */
     @PostMapping("/all")
-    public ResponseEntity<List<Template>> findAll(@RequestBody Long userId) {
+    public ResponseEntity<?> findAll(@RequestBody Long userId) {
         Long checkUserId = this.userService.getUserId();
         if (!Objects.equals(checkUserId, userId)) {
-            logger.error("Template is not match to user id of " + userId);
-            return new ResponseEntity("Template is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Template.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Template.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.findAll(userId));
     }
@@ -63,18 +63,18 @@ public class TemplateController {
      * @return response with found template or with "Template not found" message or with error message
      */
     @PostMapping("/id")
-    public ResponseEntity<Template> findById(@RequestBody Long id) {
+    public ResponseEntity<?> findById(@RequestBody Long id) {
         Long userId = this.userService.getUserId();
-        Template template = null;
+        Template template;
         try {
             template = service.findById(id).get();
         } catch (NoSuchElementException e) {
-            logger.error("Template with id = " + id + " not found");
-            return new ResponseEntity("Template not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notFoundMessage(Template.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(Template.class, id), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(template.getUserId(), userId)) {
-            logger.error("Template is not match to user id of " + id);
-            return new ResponseEntity("Template is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Template.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Template.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(template);
     }
@@ -85,19 +85,20 @@ public class TemplateController {
      * @return response with added template
      */
     @PostMapping("/add")
-    public ResponseEntity<Template> add(@RequestBody Template template) {
+    public ResponseEntity<?> add(@RequestBody Template template) {
         Long userId = this.userService.getUserId();
         if (template.getId() != null && template.getId() != 0) {
-            logger.error("Template id must be null");
-            return new ResponseEntity("Template id must be null", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.idMustBeNull(Template.class));
+            return new ResponseEntity<>(MessageTemplates.idMustBeNull(Template.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (template.getName() == null ||
                 template.getUserId() == null) {
-            logger.error("Some fields of template are empty");
-            return new ResponseEntity("Some fields of template are empty", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emptyFields(Template.class));
+            return new ResponseEntity<>(MessageTemplates.emptyFields(Template.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(template.getUserId(), userId)) {
-            return new ResponseEntity("Template is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Template.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Template.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.add(template));
     }
@@ -108,24 +109,25 @@ public class TemplateController {
      * @return response with updated template
      */
     @PatchMapping("/update")
-    public ResponseEntity<Template> update(@RequestBody Template template) {
+    public ResponseEntity<?> update(@RequestBody Template template) {
         Long userId = this.userService.getUserId();
         Long id = template.getId();
-        if (template.getId() == null && template.getId() == 0) {
-            logger.error("Template id is null");
-            return new ResponseEntity("Template id is null", HttpStatus.NOT_ACCEPTABLE);
+        if (template.getId() == null || template.getId() == 0) {
+            logger.error(MessageTemplates.idIsNull(Template.class));
+            return new ResponseEntity<>(MessageTemplates.idIsNull(Template.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (template.getName() == null ||
                 template.getUserId() == null) {
-            logger.error("Some fields of template are empty");
-            return new ResponseEntity("Some fields of template are empty", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emptyFields(Template.class));
+            return new ResponseEntity<>(MessageTemplates.emptyFields(Template.class), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!Objects.equals(template.getUserId(), userId)) {
-            return new ResponseEntity("Template is not match to user id", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notMatchMessage(Template.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(Template.class, userId), HttpStatus.NOT_ACCEPTABLE);
         }
         if (!service.findById(id).isPresent()) {
-            logger.error("Template id" + id + " is not found");
-            return new ResponseEntity("Template id " + id + " is not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notFoundMessage(Template.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(Template.class, id), HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok(service.update(template));
     }
@@ -136,16 +138,17 @@ public class TemplateController {
      * @return response with 200 status
      */
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<Template> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         if (id == null || id == 0) {
-            return new ResponseEntity("Template id missed", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.missedIdMessage(Template.class));
+            return new ResponseEntity<>(MessageTemplates.missedIdMessage(Template.class), HttpStatus.NOT_ACCEPTABLE);
         }
         try {
             service.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            logger.error("Template id "+ id + " not found");
-            return new ResponseEntity("Template id " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.notFoundMessage(Template.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(Template.class, id), HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

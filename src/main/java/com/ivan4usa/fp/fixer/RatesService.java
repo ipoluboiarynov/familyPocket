@@ -1,18 +1,14 @@
 package com.ivan4usa.fp.fixer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivan4usa.fp.entities.Currency;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Service for loading data on the exchange rate

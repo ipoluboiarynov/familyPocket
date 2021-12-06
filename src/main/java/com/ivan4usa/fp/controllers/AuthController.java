@@ -1,6 +1,7 @@
 package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ivan4usa.fp.constants.MessageTemplates;
 import com.ivan4usa.fp.exceptions.JsonException;
 import com.ivan4usa.fp.payload.request.LoginRequest;
 import com.ivan4usa.fp.payload.request.RegisterRequest;
@@ -36,9 +37,10 @@ public class AuthController {
     private final JWTTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final Logger logger = LogManager.getLogger(this.getClass());
 
     @Value("${jwt.auth.token_prefix}")
-    private String TOKEN_PREFIX;
+    private String tokenPrefix;
 
     /**
      * Constructor for class
@@ -79,7 +81,7 @@ public class AuthController {
         userDetails.getUser().setPassword(null);
 
         // Generate and response generated token with status 200
-        String jwt = TOKEN_PREFIX + jwtTokenProvider.generateToken(userDetails.getUser());
+        String jwt = tokenPrefix + jwtTokenProvider.generateToken(userDetails.getUser());
 
         // Get user id to return it to frontend
         Long id = userDetails.getUser().getId();
@@ -96,19 +98,21 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
         if (userService.userExistsByEmail(request.getEmail())) {
-            return new ResponseEntity<>("User with this email already exists.", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emailAlreadyExists(request.getEmail()));
+            return new ResponseEntity<>(MessageTemplates.emailAlreadyExists(request.getEmail()), HttpStatus.NOT_ACCEPTABLE);
         }
 
         // Validate by email
         if (request.getEmail() == null || request.getEmail().trim().length() == 0) {
-            return new ResponseEntity<>("Email is missed.", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.emailIsMissing());
+            return new ResponseEntity<>(MessageTemplates.emailIsMissing(), HttpStatus.NOT_ACCEPTABLE);
         }
         // Validate by password
         if (request.getPassword() == null || request.getPassword().trim().length() == 0 ||
                 request.getPassword().length() < 6) {
-            return new ResponseEntity<>("Password is not acceptable.", HttpStatus.NOT_ACCEPTABLE);
+            logger.error(MessageTemplates.wrongPassword());
+            return new ResponseEntity<>(MessageTemplates.wrongPassword(), HttpStatus.NOT_ACCEPTABLE);
         }
-
         return ResponseEntity.ok(userService.createUser(request));
     }
 

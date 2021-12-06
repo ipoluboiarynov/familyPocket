@@ -23,27 +23,49 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity(debug = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${jwt.auth_urls}")
-    private String auth_urls;
-
+    /**
+     * Url Address of frontend
+     */
     @Value("${client.url}")
     private String clientUrl;
 
+    /**
+     * Instance of CustomUserDetailsService
+     */
     private CustomUserDetailsService customUserDetailsService;
 
+    /**
+     * Instance of JWTAuthenticationFilter
+     */
     private JWTAuthenticationFilter authenticationFilter;
+
+    /**
+     * Instance of ExceptionHandlerFilter
+     */
     private ExceptionHandlerFilter exceptionHandlerFilter;
 
+    /**
+     * Setter for exceptionHandlerFilter
+     * @param exceptionHandlerFilter of type ExceptionHandlerFilter
+     */
     @Autowired
     public void setExceptionHandlerFilter(ExceptionHandlerFilter exceptionHandlerFilter) {
         this.exceptionHandlerFilter = exceptionHandlerFilter;
     }
 
+    /**
+     * Setter for customUserDetailsService
+     * @param customUserDetailsService of type CustomUserDetailsService
+     */
     @Autowired
     public void setCustomUserDetailsService(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
 
+    /**
+     * Setter for authenticationFilter
+     * @param authenticationFilter of type JWTAuthenticationFilter
+     */
     @Autowired
     public void setAuthenticationFilter(JWTAuthenticationFilter authenticationFilter) {
         this.authenticationFilter = authenticationFilter;
@@ -51,8 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Method sets global CORS rules
-     *
-     * @return
+     * @return WebMvcConfigurer object
      */
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -71,7 +92,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Method for encoding the password
-     *
      * @return BCryptPasswordEncoder object
      */
     @Bean
@@ -81,7 +101,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Authentication manager for checkin login ang password of user in database
-     *
      * @return authentication manager object
      * @throws Exception any exception
      */
@@ -93,7 +112,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Override method for checking if user existing in database throw the customUserDetailsService service
-     *
      * @param auth AuthenticationManagerBuilder object
      * @throws Exception any exception while doing this method
      */
@@ -106,7 +124,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Method to disable the call to the AuthTokenFilter filter for the container servlet
      * (so that the filter is not called 2 times, but only once from the Spring container)
      * https://stackoverflow.com/questions/39314176/filter-invoke-twice-when-register-as-spring-bean
-     *
      * @param filter - JWT Authentication Filter parameter
      * @return registration
      */
@@ -119,7 +136,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Configurstion for http requests
-     *
      * @param http HttpSecurity object
      * @throws Exception any exception
      */
@@ -145,7 +161,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(exceptionHandlerFilter, JWTAuthenticationFilter.class);
 
         // for https use
-//        http.requiresChannel().anyRequest().requiresSecure();
-
+        http.requiresChannel().anyRequest().requiresSecure();
     }
 }

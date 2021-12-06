@@ -35,27 +35,49 @@ import java.util.List;
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final Logger logger = LogManager.getLogger(this.getClass());
 
-    // List of public urls without jwt needed
+    /**
+     * List of public urls without jwt needed
+     */
     @Value("#{'${jwt.auth_urls}'.split(',')}")
-    private List<String> public_urls;
+    private List<String> publicUrls;
 
+    /**
+     * Token Prefix
+     */
     @Value("${jwt.auth.token_prefix}")
-    private String TOKEN_PREFIX;
+    private String tokenPrefix;
 
+    /**
+     * Header String
+     */
     @Value("${jwt.auth.header_string}")
-    private String HEADER_STRING;
+    private String headerString;
 
+    /**
+     * JWT Token Provider instance
+     */
     @Autowired
     private JWTTokenProvider jwtTokenProvider;
 
+    /**
+     * CustomUserDetailsService instance
+     */
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    /**
+     * Filter that checks for jwt in each request to the backend
+     * @param httpServletRequest request
+     * @param httpServletResponse response
+     * @param filterChain object
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        boolean isRequestToPublicApi = public_urls.stream().anyMatch(s-> httpServletRequest.getRequestURI().toLowerCase().equals(s));
+        boolean isRequestToPublicApi = publicUrls.stream().anyMatch(s-> httpServletRequest.getRequestURI().toLowerCase().equals(s));
         if (!isRequestToPublicApi && SecurityContextHolder.getContext().getAuthentication() == null) {
             String jwt = this.getJWTFromRequest(httpServletRequest);
             if (jwt != null) {
@@ -67,16 +89,21 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                     );
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                } else throw new JwtNotValidException("jwt validate exception");
+                } else { throw new JwtNotValidException("jwt validate exception"); }
 
-            } else throw new AuthenticationCredentialsNotFoundException("token not found");
+            } else { throw new AuthenticationCredentialsNotFoundException("token not found"); }
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
+    /**
+     * Method that returns jwt from request or null if it is not there
+     * @param request to the server
+     * @return jwt or null
+     */
     private String getJWTFromRequest(HttpServletRequest request) {
-        String bearToken = request.getHeader(HEADER_STRING);
-        if (StringUtils.hasText(bearToken) && bearToken.startsWith(TOKEN_PREFIX)) {
+        String bearToken = request.getHeader(headerString);
+        if (StringUtils.hasText(bearToken) && bearToken.startsWith(tokenPrefix)) {
             return bearToken.split(" ")[1];
         }
         return null;

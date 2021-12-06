@@ -1,15 +1,16 @@
 package com.ivan4usa.fp.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ivan4usa.fp.enums.RecordType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,8 @@ import java.util.List;
 @AllArgsConstructor
 public class Filter {
 
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,9 +30,13 @@ public class Filter {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @JsonFormat(pattern = DATE_PATTERN)
+    @DateTimeFormat(pattern = DATE_PATTERN)
     @Column(name = "start_date")
     private LocalDate startDate;
 
+    @JsonFormat(pattern = DATE_PATTERN)
+    @DateTimeFormat(pattern = DATE_PATTERN)
     @Column(name = "end_date")
     private LocalDate endDate;
 
