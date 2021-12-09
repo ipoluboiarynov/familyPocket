@@ -56,3 +56,16 @@ A lot of work has been done on the frontend this week:
 - improved functionality for converting dates into string format;
 - created the ability to transfer money between accounts with the completion of the backend;
 - added the ability to keep accounts in different currencies with their conversion in statistics and when exchanging between accounts.
+
+### Week 14
+
+The frontend was over this week. The functionality of transfer between accounts has been implemented, dates have been 
+converted to localDates, tests for all services and controllers have been updated and added, some bugs have been fixed.
+Also this week efforts are focused on bringing the code to best practices through the QA plugin, corrected the names of
+classes and methods, eliminated duplicates, added descriptions to all methods and classes, eliminated slides using hardcode.
+Also added a spinner in the frontend for solving UI tasks.
+
+### Week 15
+This week the main activity is directed towards recording a video presentation and final documentation of the project.
+
+### Week 16

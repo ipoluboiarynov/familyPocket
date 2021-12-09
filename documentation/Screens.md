@@ -12,10 +12,8 @@
 ### Settings
 ![Settings](design/settings.png)
 
-### Add / edit account
+### Login page
+![Login Form](design/loginForm.png)
 
-### Add / edit category
-
-### Add / edit record
-
-### Login / Register page
+### Register page
+![Register Form](design/registerForm.png)

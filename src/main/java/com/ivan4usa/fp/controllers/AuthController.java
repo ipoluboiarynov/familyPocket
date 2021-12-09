@@ -2,6 +2,7 @@ package com.ivan4usa.fp.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ivan4usa.fp.constants.MessageTemplates;
+import com.ivan4usa.fp.entities.User;
 import com.ivan4usa.fp.exceptions.JsonException;
 import com.ivan4usa.fp.payload.request.LoginRequest;
 import com.ivan4usa.fp.payload.request.RegisterRequest;
@@ -18,12 +19,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * The controller that receives requests for operations with authentication
@@ -89,7 +95,6 @@ public class AuthController {
         return ResponseEntity.ok(new JWTSuccessResponse(true, jwt, id));
     }
 
-
     /**
      * The method that receives new credentials, checks it for unique and returns response with new userr
      * @param request credentials (email address and password)
@@ -117,11 +122,72 @@ public class AuthController {
     }
 
     /**
+     * Get user by id
+     * @param id of user
+     * @return response with user
+     */
+    @PostMapping("/user-info")
+    public ResponseEntity<?> getUserInfo(@RequestBody Long id) {
+        Long userId = userService.getUserId();
+        User user;
+        try {
+            user = userService.getUserById(id).get();
+        } catch (NoSuchElementException e) {
+            logger.error(MessageTemplates.notFoundMessage(User.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(User.class, id), HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (!Objects.equals(id, userId)) {
+            logger.error(MessageTemplates.notMatchMessage(User.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(User.class, userId), HttpStatus.NOT_ACCEPTABLE);
+        }
+        return ResponseEntity.ok(user);
+    }
+
+    /**
+     * Update name of user or email
+     * @param user object
+     * @return new token for updated user
+     */
+    @PatchMapping("/update-user")
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+        Long userId = this.userService.getUserId();
+        Long id = user.getId();
+        if (id == null || id == 0) {
+            logger.error(MessageTemplates.idIsNull(User.class));
+            return new ResponseEntity<>(MessageTemplates.idIsNull(User.class), HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (user.getEmail() == null ) {
+            logger.error(MessageTemplates.emptyFields(User.class));
+            return new ResponseEntity<>(MessageTemplates.emptyFields(User.class), HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (!Objects.equals(id, userId)) {
+            logger.error(MessageTemplates.notMatchMessage(User.class, userId));
+            return new ResponseEntity<>(MessageTemplates.notMatchMessage(User.class, userId), HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (!userService.getUserById(id).isPresent()) {
+            logger.error(MessageTemplates.notFoundMessage(User.class, id));
+            return new ResponseEntity<>(MessageTemplates.notFoundMessage(User.class, id), HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        String token = userService.updateUser(user);
+        if (token != null) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            userDetails.setUser(user);
+            List<GrantedAuthority> authorities = new ArrayList<>(authentication.getAuthorities());
+            Authentication newAuthentication = new UsernamePasswordAuthenticationToken(userDetails, authentication.getCredentials(), authorities);
+            SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+            return ResponseEntity.ok(new JWTSuccessResponse(true, tokenPrefix + token, userId));
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_EXTENDED);
+    }
+
+    /**
      * The method that updates password for user by user id
      * @param password new password
      * @return response with updated rows
      */
-    @PostMapping("/update-password")
+    @PatchMapping("/update-password")
     public ResponseEntity<Boolean> updatePassword(@RequestBody String password) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();

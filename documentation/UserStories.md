@@ -31,3 +31,18 @@ As a user I want to be able to change my profile info so that I can keep up to d
 
 ### Device friendly device
 As a user I want to responsive design of application so that I can use it by my phone or tablet
+
+### Managing account types
+As a user I want to create / edit / delete account types such as credit card, debit card, current account etc
+
+### Managing currencies
+As a user I want to have opportunity to accounting my accounts in different currencies
+
+### Managing filters
+As a user I want to save filters for filtering records, and also to edit that and delete
+
+### Managing templates
+As a user I want to manage (add, edit, delete) templates for records to quickly adding of record
+
+### Transfer between accounts
+As a user I want to transfer money between my accounts and also to cancel these transactions if it is wrong 

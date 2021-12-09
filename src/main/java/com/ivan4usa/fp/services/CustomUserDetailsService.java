@@ -40,6 +40,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(user);
     }
 
+    /**
+     * Load user by user id to theUserDetails object method
+     * @param id of user
+     * @return UserDetails object
+     */
     public UserDetails loadUserById(Long id) {
         User user =  userRepository.findUserById(id)
                 .orElse(null);

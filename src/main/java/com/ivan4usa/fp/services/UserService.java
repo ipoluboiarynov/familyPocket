@@ -6,6 +6,7 @@ import com.ivan4usa.fp.exceptions.UserExistsException;
 import com.ivan4usa.fp.payload.request.RegisterRequest;
 import com.ivan4usa.fp.repositories.RoleRepository;
 import com.ivan4usa.fp.repositories.UserRepository;
+import com.ivan4usa.fp.security.JWTTokenProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class UserService {
      */
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private JWTTokenProvider jwtTokenProvider;
+
     /**
      * Constructor for the class
      * @param userRepository user repository
@@ -53,10 +56,12 @@ public class UserService {
      * @param bCryptPasswordEncoder bCryptPassword encoder
      */
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                       JWTTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     /**
@@ -137,16 +142,20 @@ public class UserService {
     }
 
     /**
-     * Method updates users data - name or/and email by id
+     * Method updates users data - name or/and email by id and returns new generated token for updated user or null
      * @param user with updated data
-     * @return 1 if success or 0 if failure
+     * @return token if success or null if failure
      */
-    public int updateUser(User user) {
+    public String updateUser(User user) {
         try {
-            return userRepository.updateUserData(user.getName(), user.getEmail(), user.getId());
+            String newToken = this.jwtTokenProvider.generateToken(user);
+            int rows = userRepository.updateUserData(user.getName(), user.getEmail(), user.getId());
+            if (rows == 1) {
+                return newToken;
+            }
         } catch (Exception e) {
             logger.error("Failed to update user. " + e.getMessage());
         }
-        return 0;
+        return null;
     }
 }
