@@ -1,5 +1,6 @@
 package com.ivan4usa.fp.services;
 
+import com.ivan4usa.fp.entities.CustomUserDetails;
 import com.ivan4usa.fp.entities.User;
 import com.ivan4usa.fp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,18 +38,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(email + " not found."));
-        return new CustomUserDetails(user);
-    }
-
-    /**
-     * Load user by user id to theUserDetails object method
-     * @param id of user
-     * @return UserDetails object
-     */
-    public UserDetails loadUserById(Long id) {
-        User user =  userRepository.findUserById(id)
-                .orElse(null);
-        assert user != null;
         return new CustomUserDetails(user);
     }
 }

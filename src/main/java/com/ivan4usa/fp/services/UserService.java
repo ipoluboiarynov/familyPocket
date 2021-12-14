@@ -1,5 +1,6 @@
 package com.ivan4usa.fp.services;
 
+import com.ivan4usa.fp.entities.CustomUserDetails;
 import com.ivan4usa.fp.entities.Role;
 import com.ivan4usa.fp.entities.User;
 import com.ivan4usa.fp.exceptions.UserExistsException;

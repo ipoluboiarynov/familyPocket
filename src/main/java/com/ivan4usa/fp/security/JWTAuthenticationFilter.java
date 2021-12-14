@@ -2,7 +2,7 @@ package com.ivan4usa.fp.security;
 
 import com.ivan4usa.fp.entities.User;
 import com.ivan4usa.fp.exceptions.JwtNotValidException;
-import com.ivan4usa.fp.services.CustomUserDetails;
+import com.ivan4usa.fp.entities.CustomUserDetails;
 import com.ivan4usa.fp.services.CustomUserDetailsService;
 import lombok.Getter;
 import lombok.Setter;

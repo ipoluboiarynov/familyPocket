@@ -39,4 +39,7 @@
 | 12/03/21 | Fixed and added tests, added description for classes and methods | 5 |
 | 12/05/21 | Fixing bugs | 4 |
 | 12/06/21 | Working on QA Plugin recommendations and adding jDoc comments | 4 |
+| 12/08/21 | Recording video presentation | 2 |
+| 12/09/21 | Recording video presentation | 2 |
+| 12/13/21 | Uploading video on youtube and make last changes in documentation | 2 |
 

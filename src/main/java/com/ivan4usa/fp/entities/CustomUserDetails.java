@@ -1,4 +1,4 @@
-package com.ivan4usa.fp.services;
+package com.ivan4usa.fp.entities;
 
 import com.ivan4usa.fp.entities.User;
 import lombok.Setter;

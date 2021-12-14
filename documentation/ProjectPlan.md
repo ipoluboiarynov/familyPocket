@@ -89,9 +89,9 @@ vacation
 ### Week 15
 - [x] Code quality check
 - [x] Finalize all documentation
-- [ ] Final Presentation
-- [ ] Create video, add video link to readme.md
+- [x] Final Presentation
+- [x] Create video, add video link to readme.md
 
 ### Week 16
-- [ ] Weekly journal entry
-- [ ] Final touches before code complete
+- [x] Weekly journal entry
+- [x] Final touches before code complete

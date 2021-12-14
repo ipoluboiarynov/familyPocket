@@ -8,7 +8,7 @@ import com.ivan4usa.fp.payload.request.LoginRequest;
 import com.ivan4usa.fp.payload.request.RegisterRequest;
 import com.ivan4usa.fp.payload.response.JWTSuccessResponse;
 import com.ivan4usa.fp.security.JWTTokenProvider;
-import com.ivan4usa.fp.services.CustomUserDetails;
+import com.ivan4usa.fp.entities.CustomUserDetails;
 import com.ivan4usa.fp.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

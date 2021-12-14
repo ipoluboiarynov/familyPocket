@@ -24,7 +24,7 @@ other, and our application will provide order in your money matters.
 | Logging | Log4J2 |
 | Hosting | Heroku |
 | Independent Research Topic's | Spring Boot, Spring Security, Angular, Mockito Unit Tests, Jackson extensions, Json Web Token, Lombok, Postgres |
-| Unit Testing | JUnit 5 with Mockito |
+| Unit Testing | Mockito |
 | IDE | IntelliJ IDEA |
 | VCS | Git |
 | Frontend Framework | Angular 12 (typescript) |
@@ -44,3 +44,20 @@ other, and our application will provide order in your money matters.
 ### Security
 
 * [Security Structure Presentation](documentation/SecurityPresentation.pptx)
+
+### Final presentation
+
+* [You Tube Video](https://youtu.be/2MT-ExosW60)
+
+### Links to additional resources
+
+* [Angular official resource](https://angular.io/)
+* [Spring official resource](https://spring.io/)
+* [Mockito Testing](https://site.mockito.org/)
+* [Resource with extensions for Angular and other Node.js-based frameworks](https://npmjs.com/)
+* [PostgreSQL](https://www.postgresql.org/)
+* [Heroku](https://www.heroku.com/home)
+* [Lombok](https://projectlombok.org/)
+* [Json Web Token](https://jwt.io/)
+* [Bootstrap](https://getbootstrap.com/)
+

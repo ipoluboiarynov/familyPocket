@@ -67,5 +67,7 @@ Also added a spinner in the frontend for solving UI tasks.
 
 ### Week 15
 This week the main activity is directed towards recording a video presentation and final documentation of the project.
+I recorded a video and posted it on YouTube. A link to it is posted in the readme document.
 
 ### Week 16
+Completion of documents and final check of the project.

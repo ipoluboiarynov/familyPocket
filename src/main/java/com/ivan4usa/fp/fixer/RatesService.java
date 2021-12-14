@@ -22,12 +22,6 @@ public class RatesService {
     @Value("${fixer.key}")
     private String fixerKey;
 
-    @Value("${rapid.host}")
-    private String rapidHost;
-
-    @Value("${rapid.key}")
-    private String rapidKey;
-
     /**
      * A method that calls an external api service (FIxer.io) to load data on the exchange rate
      * for the date specified in the received parameter
@@ -53,26 +47,5 @@ public class RatesService {
         }
         rates.setRates(list);
         return rates;
-    }
-
-    /**
-     * A method that calls an external api service (Rapid Api) to load data on the exchange rate
-     * for the date specified in the received parameter
-     * @param date date of String type ("yyyy-mm-dd")
-     * @return rates of currencies
-     * @throws IOException any exception
-     */
-    public Rates loadRatesByDateRapid(String date) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url("https://" + rapidHost + "/" + date + "?base=USD")
-                .get()
-                .addHeader("x-rapidapi-host", rapidHost)
-                .addHeader("x-rapidapi-key", rapidKey)
-                .build();
-        Response response = client.newCall(request).execute();
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(response.body().string(), Rates.class);
     }
 }
