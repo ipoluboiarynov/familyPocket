@@ -163,15 +163,15 @@
 
 	<profiles>
 		<profile>
-			<id>aws</id>
+			<id>prod</id>
 			<properties>
-				<spring.profiles.active>aws</spring.profiles.active>
+				<spring.profiles.active>prod</spring.profiles.active>
 			</properties>
 		</profile>
 		<profile>
-			<id>heroku</id>
+			<id>local</id>
 			<properties>
-				<spring.profiles.active>heroku</spring.profiles.active>
+				<spring.profiles.active>local</spring.profiles.active>
 			</properties>
 		</profile>
 	</profiles>

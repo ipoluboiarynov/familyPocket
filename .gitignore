@@ -6,12 +6,13 @@
 
 # IntelliJ
 /out/
-.idea/*
+/.idea/
 
 # Maven
 /target/
 /logs/
 /lib/
+/.mvn/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -20,3 +21,9 @@
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# Environmet variables
+*/application-prod.properties
+
+# Docker
+/docker-compose.yml
