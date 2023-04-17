@@ -83,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 registry.
                         addMapping("/**"). // for all URL
                         allowedOrigins(clientUrl). // from which addresses to allow requests (can be specified separated by commas)
-                        allowCredentials(true). // allow cookies to be sent for cross-site request
+                        allowCredentials(false). // allow cookies to be sent for cross-site request
                         allowedHeaders("*"). // allow all headers - without this setting, it may not work in some browsers
                         allowedMethods("*"); // all methods are allowed (GET, POST, etc.) - CORS won't work without this setting!
             }
@@ -161,6 +161,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(exceptionHandlerFilter, JWTAuthenticationFilter.class);
 
         // for https use
-        http.requiresChannel().anyRequest().requiresSecure();
+//        http.requiresChannel().anyRequest().requiresSecure();
     }
 }
